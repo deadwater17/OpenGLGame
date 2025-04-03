@@ -1,0 +1,115 @@
+#include "Shader.h"
+
+const GLchar* fragmentShaderSrc =
+"uniform sampler2D u_Texture;       " \
+"varying vec2 v_TexCoord;           " \
+"uniform vec3 u_ViewPos;            " \
+"uniform mat4 u_View;               " \
+"                                   " \
+"vec3 lightPos = vec3(10,10,10);    " \
+"vec3 diffuseColor = vec3(1,1,1);   " \
+"vec3 specularColor = vec3 (1,1,1); " \
+"                                   " \
+"varying vec3 v_Normal;             " \
+"varying vec3 v_FragPos;            " \
+"								    " \
+"void main()                        " \
+"{                                  " \
+"vec3 N = normalize(v_Normal);      " \
+"vec3 lightDir = normalize(lightPos - v_FragPos);   " \
+"float diff = max(dot(N, lightDir), 0.0);           " \
+"vec3 diffuse = diffuseColor * diff;                " \
+"                                                   " \
+"vec3 viewDir = normalize(u_ViewPos - v_FragPos);   " \
+"vec3 reflectDir = reflect(-lightDir,N);            " \
+"float spec = pow (max(dot(viewDir, reflectDir), 0.0),32);" \
+"vec3 specular = spec * specularColor;              " \
+"                                                   " \
+"vec4 viewPos = inverse(u_View) * vec4 (0,0,0,1);   " \
+""\
+"vec4 tex = texture2D (u_Texture, v_TexCoord);      " \
+"vec3 lighting = diffuse + specular;                " \
+"gl_FragColor = vec4(lighting,1)* tex;              " \
+"}									";
+
+const GLchar* vertexShaderSrc =
+"attribute vec3 a_Position;             " \
+"attribute vec2 a_TexCoord;             " \
+"attribute vec3 a_Normal;               " \
+"uniform mat4 u_Projection;             " \
+"uniform mat4 u_Model;                  " \
+"                                       " \
+"varying vec3 v_FragPos;                " \
+"varying vec3 v_Normal;                 " \
+"varying vec2 v_TexCoord;               " \
+"void main()                            " \
+"{                                      " \
+" gl_Position = u_Projection * u_Model * vec4(a_Position, 1.0); " \
+"v_TexCoord = a_TexCoord;               " \
+"                                       " \
+"v_Normal = mat3(u_Model) * a_Normal;   " \
+"v_FragPos = vec3(u_Model * vec4(a_Position, 1.0));" \
+"}                                      ";
+
+Shader::Shader(const char* vertexPath, const char* fragmentPath)
+{
+	programId = glCreateProgram();
+	GLuint vertexShaderId = VertexShader();
+	GLuint fragmentShaderId = FragmentShader();
+
+	glAttachShader(programId, vertexShaderId);
+	glAttachShader(programId, fragmentShaderId);
+	glBindAttribLocation(programId, 0, "a_Position");
+	glBindAttribLocation(programId, 1, "a_TexCoord");
+	glBindAttribLocation(programId, 2, "a_Normal");
+	glLinkProgram(programId);
+
+	GLint success = 0;
+
+	glGetProgramiv(programId, GL_LINK_STATUS, &success);
+
+	//checks success
+	if (!success)
+	{
+		throw std::exception();
+	}
+
+	return programId;
+}
+
+Shader::~Shader()
+{
+	glDeleteShader(programId);
+}
+
+GLuint Shader::VertexShader()
+{
+	// Load and compile vertex shader
+	GLuint vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vertexShaderId, 1, &vertexShaderSrc, NULL);
+	glCompileShader(vertexShaderId);
+	GLint success = 0;
+	glGetShaderiv(vertexShaderId, GL_COMPILE_STATUS, &success);
+	if (!success)
+	{
+		throw std::exception();
+	}
+
+	return vertexShaderId;	
+}
+
+GLuint Shader::FragmentShader()
+{
+	// Load and compile fragment shader
+	GLuint fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragmentShaderId, 1, &fragmentShaderSrc, NULL);
+	glCompileShader(fragmentShaderId);
+	GLint success = 0;
+	glGetShaderiv(fragmentShaderId, GL_COMPILE_STATUS, &success);
+	if (!success)
+	{
+		throw std::exception();
+	}
+
+	return fragmentShaderId;
+}
