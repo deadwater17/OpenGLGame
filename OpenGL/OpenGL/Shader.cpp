@@ -1,61 +1,10 @@
 #include "Shader.h"
 
-const GLchar* fragmentShaderSrc =
-"uniform sampler2D u_Texture;       " \
-"varying vec2 v_TexCoord;           " \
-"uniform vec3 u_ViewPos;            " \
-"uniform mat4 u_View;               " \
-"                                   " \
-"vec3 lightPos = vec3(10,10,10);    " \
-"vec3 diffuseColor = vec3(1,1,1);   " \
-"vec3 specularColor = vec3 (1,1,1); " \
-"                                   " \
-"varying vec3 v_Normal;             " \
-"varying vec3 v_FragPos;            " \
-"								    " \
-"void main()                        " \
-"{                                  " \
-"vec3 N = normalize(v_Normal);      " \
-"vec3 lightDir = normalize(lightPos - v_FragPos);   " \
-"float diff = max(dot(N, lightDir), 0.0);           " \
-"vec3 diffuse = diffuseColor * diff;                " \
-"                                                   " \
-"vec3 viewDir = normalize(u_ViewPos - v_FragPos);   " \
-"vec3 reflectDir = reflect(-lightDir,N);            " \
-"float spec = pow (max(dot(viewDir, reflectDir), 0.0),32);" \
-"vec3 specular = spec * specularColor;              " \
-"                                                   " \
-"vec4 viewPos = inverse(u_View) * vec4 (0,0,0,1);   " \
-""\
-"vec4 tex = texture2D (u_Texture, v_TexCoord);      " \
-"vec3 lighting = diffuse + specular;                " \
-"gl_FragColor = vec4(lighting,1)* tex;              " \
-"}									";
-
-const GLchar* vertexShaderSrc =
-"attribute vec3 a_Position;             " \
-"attribute vec2 a_TexCoord;             " \
-"attribute vec3 a_Normal;               " \
-"uniform mat4 u_Projection;             " \
-"uniform mat4 u_Model;                  " \
-"                                       " \
-"varying vec3 v_FragPos;                " \
-"varying vec3 v_Normal;                 " \
-"varying vec2 v_TexCoord;               " \
-"void main()                            " \
-"{                                      " \
-" gl_Position = u_Projection * u_Model * vec4(a_Position, 1.0); " \
-"v_TexCoord = a_TexCoord;               " \
-"                                       " \
-"v_Normal = mat3(u_Model) * a_Normal;   " \
-"v_FragPos = vec3(u_Model * vec4(a_Position, 1.0));" \
-"}                                      ";
-
-Shader::Shader(const char* vertexPath, const char* fragmentPath)
+Shader::Shader(const char* vertexSrc, const char* fragmentSrc)
 {
 	programId = glCreateProgram();
-	GLuint vertexShaderId = VertexShader();
-	GLuint fragmentShaderId = FragmentShader();
+	vertexShaderId = compileShader(vertexSrc, GL_VERTEX_SHADER);
+	fragmentShaderId = compileShader(fragmentSrc, GL_FRAGMENT_SHADER);
 
 	glAttachShader(programId, vertexShaderId);
 	glAttachShader(programId, fragmentShaderId);
@@ -71,45 +20,39 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath)
 	//checks success
 	if (!success)
 	{
-		throw std::exception();
+		GLint logLength = 0;
+		glGetProgramiv(programId, GL_INFO_LOG_LENGTH, &logLength);
+		std::vector<char> log(logLength);
+		glGetProgramInfoLog(programId, logLength, &logLength, log.data());
+		std::cerr << "Program linking failed: " << log.data() << std::endl;
+		throw std::runtime_error("Program linking failed");
 	}
-
-	return programId;
 }
 
 Shader::~Shader()
 {
-	glDeleteShader(programId);
+	glDetachShader(programId, vertexShaderId);
+	glDeleteShader(vertexShaderId);
+	glDetachShader(programId, fragmentShaderId);
+	glDeleteShader(fragmentShaderId);
 }
 
-GLuint Shader::VertexShader()
-{
-	// Load and compile vertex shader
-	GLuint vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertexShaderId, 1, &vertexShaderSrc, NULL);
-	glCompileShader(vertexShaderId);
+GLuint Shader::compileShader(const char* src, GLenum type) {
+	GLuint shaderId = glCreateShader(type);
+	glShaderSource(shaderId, 1, &src, NULL);
+	glCompileShader(shaderId);
+
 	GLint success = 0;
-	glGetShaderiv(vertexShaderId, GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		throw std::exception();
+	glGetShaderiv(shaderId, GL_COMPILE_STATUS, &success);
+	if (!success) {
+		GLint logLength = 0;
+		glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &logLength);
+		std::vector<char> log(logLength);
+		glGetShaderInfoLog(shaderId, logLength, &logLength, log.data());
+		std::cerr << "Shader compilation failed: " << log.data() << std::endl;
+		throw std::runtime_error("Shader compilation failed");
 	}
 
-	return vertexShaderId;	
+	return shaderId;
 }
 
-GLuint Shader::FragmentShader()
-{
-	// Load and compile fragment shader
-	GLuint fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragmentShaderId, 1, &fragmentShaderSrc, NULL);
-	glCompileShader(fragmentShaderId);
-	GLint success = 0;
-	glGetShaderiv(fragmentShaderId, GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		throw std::exception();
-	}
-
-	return fragmentShaderId;
-}

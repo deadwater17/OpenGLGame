@@ -103,7 +103,10 @@ int main()
         "v_FragPos = vec3(u_Model * vec4(a_Position, 1.0));" \
         "}                                      ";
 
+
     Shader shader(vertexShaderSrc, fragmentShaderSrc);
+	GLuint programId = shader.getID();
+
     /*
     unsigned char* data = stbi_load("Pikachu.png", &w, &h, NULL, 4);
 
@@ -333,7 +336,7 @@ int main()
     */
 
     //finding uniform location
-    GLint modelLoc = glGetUniformLocation(shader.programId, "u_Model");    //creating model matrix
+    GLint modelLoc = glGetUniformLocation(programId, "u_Model");    //creating model matrix
     GLint projectionLoc = glGetUniformLocation(programId, "u_Projection");  //generating perspective projection matrix and assigning it
 
     //Stores location of the color uniform and checks if it is succesfully found
@@ -343,16 +346,6 @@ int main()
     //{
     //    throw std::exception();
     //}
-
-
-
-    //detach and destroyd shader objects once we have a complete shader program
-    glDetachShader(programId, vertexShaderId);
-    glDeleteShader(vertexShaderId);
-    glDetachShader(programId, fragmentShaderId);
-    glDeleteShader(fragmentShaderId);
-
-
 
     bool quit = false;
     float angle = 0.0f;
