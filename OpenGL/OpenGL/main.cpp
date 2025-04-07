@@ -17,43 +17,30 @@
 
 #undef main
 
+SDL_Window* initializeSDL();
+void initializeGLEW();
+GLuint createShaderProgram(const GLchar* vertexShaderSrc, const GLchar* fragmentShaderSrc);
+GLuint createVBO(const GLfloat* data, size_t dataSize);
+GLuint createVAO(GLuint positionsVboID, GLuint colorsVboId);
+void mainLoop(SDL_Window* window, GLuint programId, Model& cat, Texture& catTex, World& world);
+
+
 int main()
 {
-    SDL_Window* window = SDL_CreateWindow("Triangle",
-        SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-        WINDOW_WIDTH, WINDOW_HEIGHT,
-        SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
+    SDL_Window* window = initializeSDL();
+    initializeGLEW();
 
-    //connection to GPU, checks if it's connected
-    if (!SDL_GL_CreateContext(window))
-    {
-        throw std::runtime_error("Failed to create OpenGL context");
-    }
-
-    if (glewInit() != GLEW_OK)
-    {
-        throw std::runtime_error("Failed to initialze GLEW");
-    }
-
-
-    //points describing the shape (triangle)
-    const GLfloat positions[] =
-    {
-        0.0f, 0.5f, 0.0f,       //x (starts from centre of the screen),y,z
+    const GLfloat positions[] = {
+        0.0f, 0.5f, 0.0f,
         -0.5f, -0.5f, 0.0f,
         0.5f, -0.5f, 0.0f
     };
 
-    //defining the color of each point of the triangle
-    const GLfloat colors[] =
-    {
+    const GLfloat colors[] = {
         1.0f, 0.0f, 0.0f, 1.0f,
         0.0f, 1.0f, 0.0f, 1.0f,
         0.0f, 0.0f, 1.0f, 1.0f,
     };
-
-    int w = 0;
-    int h = 0;
 
     const GLchar* fragmentShaderSrc =
         "uniform sampler2D u_Texture;       " \
@@ -107,168 +94,126 @@ int main()
         "}                                      ";
 
 
-    Shader shader(vertexShaderSrc, fragmentShaderSrc);
-	GLuint programId = shader.getID();
-
+    GLuint programId = createShaderProgram(vertexShaderSrc, fragmentShaderSrc);
     Model cat("curuthers.obj");
-
     Texture catTex("Whiskers_diffuse.png");
+    World world(vertexShaderSrc, fragmentShaderSrc);
 
-	World world(vertexShaderSrc, fragmentShaderSrc);
+    GLuint positionsVboID = createVBO(positions, sizeof(positions));
+    GLuint colorsVboId = createVBO(colors, sizeof(colors));
+    GLuint vaoId = createVAO(positionsVboID, colorsVboId);
 
-    // Creating new Vertex Buffer Object (VBO) on the GPU and binding it
-    GLuint positionsVboID = 0;  //VBO
-    glGenBuffers(1, &positionsVboID);
-    if (!positionsVboID)
-    {
-        throw std::runtime_error("Failed to Initialise VBO on GPU");
+    mainLoop(window, programId, cat, catTex, world);
+
+    return 0;
+}
+
+SDL_Window* initializeSDL() {
+    SDL_Window* window = SDL_CreateWindow("Triangle",
+        SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+        WINDOW_WIDTH, WINDOW_HEIGHT,
+        SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
+
+    if (!SDL_GL_CreateContext(window)) {
+        throw std::runtime_error("Failed to create OpenGL context");
     }
-    glBindBuffer(GL_ARRAY_BUFFER, positionsVboID);
-    //upload copy of data from memory to VBO
-    glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions, GL_STATIC_DRAW);
-    //resets the state
+
+    return window;
+}
+
+void initializeGLEW() {
+    if (glewInit() != GLEW_OK) {
+        throw std::runtime_error("Failed to initialize GLEW");
+    }
+}
+
+GLuint createShaderProgram(const GLchar* vertexShaderSrc, const GLchar* fragmentShaderSrc) {
+    Shader shader(vertexShaderSrc, fragmentShaderSrc);
+    return shader.getID();
+}
+
+GLuint createVBO(const GLfloat* data, size_t dataSize) {
+    GLuint vboID = 0;
+    glGenBuffers(1, &vboID);
+    if (!vboID) {
+        throw std::runtime_error("Failed to initialize VBO on GPU");
+    }
+    glBindBuffer(GL_ARRAY_BUFFER, vboID);
+    glBufferData(GL_ARRAY_BUFFER, dataSize, data, GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+    return vboID;
+}
 
-    //creating VBO and uploading data onto it and assigning it to position 1 of VAO
-    GLuint colorsVboId = 0;
-    //creating colors VBO on GPU and binding it
-    glGenBuffers(1, &colorsVboId);
-    if(!colorsVboId)
-    {
-        throw std::exception();
-    }
-    glBindBuffer(GL_ARRAY_BUFFER, colorsVboId);
-    //upload copy of data from memory to VBO
-    glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
-
-    //creating Vertex Array Object (VAO) on GPU and binding it
-    GLuint vaoId = 0;   //VAO
+GLuint createVAO(GLuint positionsVboID, GLuint colorsVboId) {
+    GLuint vaoId = 0;
     glGenVertexArrays(1, &vaoId);
-    if (!vaoId)
-    {
-        throw std::runtime_error("Failed to initialise VAO on GPU");
+    if (!vaoId) {
+        throw std::runtime_error("Failed to initialize VAO on GPU");
     }
     glBindVertexArray(vaoId);
-    //binds VBO position, assigned as 0 on the bound VAO
+
     glBindBuffer(GL_ARRAY_BUFFER, positionsVboID);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
-        3 * sizeof(GLfloat), (void*)0);
-
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (void*)0);
     glEnableVertexAttribArray(0);
 
-    //binding color of VBO and assigning it to position 1 on the bound VBO, flagging it to be used
     glBindBuffer(GL_ARRAY_BUFFER, colorsVboId);
     glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (void*)0);
     glEnableVertexAttribArray(1);
 
-    //resets state
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
-    //finding uniform location
-    GLint modelLoc = glGetUniformLocation(programId, "u_Model");    //creating model matrix
-    GLint projectionLoc = glGetUniformLocation(programId, "u_Projection");  //generating perspective projection matrix and assigning it
+    return vaoId;
+}
+
+void mainLoop(SDL_Window* window, GLuint programId, Model& cat, Texture& catTex, World& world) {
+    GLint modelLoc = glGetUniformLocation(programId, "u_Model");
+    GLint projectionLoc = glGetUniformLocation(programId, "u_Projection");
 
     bool quit = false;
     float angle = 0.0f;
-
     int width = 0;
     int height = 0;
 
-    while (!quit)
-    {
+    while (!quit) {
         SDL_Event ev = { 0 };
-        while (SDL_PollEvent(&ev))
-        {
-            if (ev.type == SDL_QUIT)
-            {
+        while (SDL_PollEvent(&ev)) {
+            if (ev.type == SDL_QUIT) {
                 quit = true;
             }
-            else if (ev.type == SDL_KEYDOWN || ev.type == SDL_KEYUP)
-            {
+            else if (ev.type == SDL_KEYDOWN || ev.type == SDL_KEYUP) {
                 world.keyboard[ev.key.keysym.scancode] = (ev.type == SDL_KEYDOWN);
             }
         }
 
-
-        //basically get the width and height and updates the screen accordingly
         SDL_GetWindowSize(window, &width, &height);
         glViewport(0, 0, width, height);
 
-        glClearColor(1.0f, 0.0f, 0.0f, 1.0f);   // RBGA
+        glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		world.render();
+        world.render();
 
-
-        //tells OpenGL to use our shader program and our VAO
         glUseProgram(programId);
-        glBindVertexArray(cat.vao_id());   //might comment out 
+        glBindVertexArray(cat.vao_id());
 
         glm::mat4 projection = glm::perspective(glm::radians(120.0f),
             (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 100.0f);
 
-        //this is the model matrix for 
         glm::mat4 model(1.0f);
         model = glm::translate(model, glm::vec3(0, 0, -2.0f));
         model = glm::rotate(model, glm::radians(angle), glm::vec3(0, 1, 0));
-
-        // Increase the float angle so next frame the triangle rotates further (increases speed of rotation)
         angle += 0.1f;
 
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
-        // Upload the projection matrix
-        glUniformMatrix4fv(projectionLoc, 1, GL_FALSE,
-            glm::value_ptr(projection));
-
-
-        // glActiveTexture(GL_TEXTURE0 + 1);
         glBindTexture(GL_TEXTURE_2D, catTex.id());
 
         glEnable(GL_DEPTH_TEST);
-        //glCullFace(GL_FRONT);
-
-        //glEnable(GL_CULL_FACE);
         glDrawArrays(GL_TRIANGLES, 0, cat.vertex_count());
         glDisable(GL_CULL_FACE);
 
-        /*
-        //ORTHOGRAPHIC PROJECTION
-        // Prepare the orthographic projection matrix (reusing the variable)
-        projection = glm::ortho(0.0f, (float)WINDOW_WIDTH, 0.0f,
-            (float)WINDOW_HEIGHT, 0.0f, 1.0f);
-
-        // Prepare model matrix. The scale is important because now our triangle
-        // would be the size of a single pixel when mapped to an orthographic
-        // projection.
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(100, WINDOW_HEIGHT - 100, 0));
-        model = glm::scale(model, glm::vec3(100, 100, 1));
-
-        // Upload the model matrix
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-
-        // Upload the projection matrix
-        glUniformMatrix4fv(projectionLoc, 1, GL_FALSE,
-           glm::value_ptr(projection));
-
-        // Draw 3 vertices (a triangle)
-        glDrawArrays(GL_TRIANGLES, 0, 3);
-
-        //binds the shader to change the uniform, currently set to green
-        //glUniform4f(colorUniformId, 0, 1, 0, 1);
-        //glUniform4f(colorUniformId, 1, 1, 0, 1); //This would be yellow
-
-        // Reset the state
-        glBindVertexArray(0);
-        glUseProgram(0);
-        glBindTexture(GL_TEXTURE_2D, 0);
-        */
-
         SDL_GL_SwapWindow(window);
-
     }
-    return 0;
 }
