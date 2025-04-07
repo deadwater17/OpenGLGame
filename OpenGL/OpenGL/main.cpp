@@ -169,8 +169,8 @@ GLuint createVAO(GLuint positionsVboID, GLuint colorsVboId) {
 }
 
 void mainLoop(SDL_Window* window, GLuint programId, Player& player, Texture& playerTex, World& world) {
-    GLint modelLoc = glGetUniformLocation(programId, "u_Model");
     GLint projectionLoc = glGetUniformLocation(programId, "u_Projection");
+    GLint modelLoc = glGetUniformLocation(programId, "u_Model"); // Get the location of the u_Model uniform
 
     bool quit = false;
     float angle = 0.0f;
@@ -187,6 +187,7 @@ void mainLoop(SDL_Window* window, GLuint programId, Player& player, Texture& pla
                 world.keyboard[ev.key.keysym.scancode] = (ev.type == SDL_KEYDOWN);
             }
         }
+        world.handleInput(); // Handle input for the world and player
 
         SDL_GetWindowSize(window, &width, &height);
         glViewport(0, 0, width, height);
@@ -197,25 +198,27 @@ void mainLoop(SDL_Window* window, GLuint programId, Player& player, Texture& pla
         world.render();
 
         glUseProgram(programId);
-        glBindVertexArray(player.vao_id());
 
         glm::mat4 projection = glm::perspective(glm::radians(120.0f),
             (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 100.0f);
 
         glm::mat4 model(1.0f);
-        model = glm::translate(model, glm::vec3(0, 0, -2.0f));
+        model = glm::translate(model, player.playerPos); // Use player's model position
         model = glm::rotate(model, glm::radians(angle), glm::vec3(0, 1, 0));
         angle += 0.1f;
 
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); // Set the model matrix
 
         glBindTexture(GL_TEXTURE_2D, playerTex.id());
 
         glEnable(GL_DEPTH_TEST);
-        glDrawArrays(GL_TRIANGLES, 0, player.vertex_count());
+        player.m_world->light.draw(player, player.playerPos); // Use Shader::draw method
         glDisable(GL_CULL_FACE);
 
         SDL_GL_SwapWindow(window);
+
+        // Debug output to verify position
+        std::cout << "Rendering player at position: (" << player.playerPos.x << ", " << player.playerPos.y << ", " << player.playerPos.z << ")" << std::endl;
     }
 }
