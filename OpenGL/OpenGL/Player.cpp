@@ -1,14 +1,9 @@
-
-/*
 #include "Player.h"
-
-// .cpp
+#include "World.h"
 
 Player::Player(World* _world)
     : m_world(_world)
-{
-
-}
+{ }
 
 void Player::update()
 {
@@ -18,15 +13,15 @@ void Player::update()
     }
 }
 
+
 void Player::display()
 {
     if (m_damaged)
     {
-        m_world->pulse.draw(m_world.playermodel);
+      //  m_world->pulse.draw(m_world.playermodel);
     }
     else
     {
-        m_world->light.draw(m_world.playermodel);
+        m_world->light.draw(m_world->playermodel,m_pos);
     }
 }
-*/

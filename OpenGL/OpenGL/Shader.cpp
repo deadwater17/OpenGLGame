@@ -56,3 +56,24 @@ GLuint Shader::compileShader(const char* src, GLenum type) {
 	return shaderId;
 }
 
+void Shader::draw(const Model& model, const glm::vec3& position)
+{
+	// Use the shader program for rendering the model
+	glUseProgram(getID());
+
+	// Set up the model transformation matrix
+	glm::mat4 modelMatrix = glm::mat4(1.0f);
+	modelMatrix = glm::translate(modelMatrix, position);
+
+	// Set the uniform variables for the shader
+	GLint modelLoc = glGetUniformLocation(getID(), "u_Model");
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelMatrix));
+
+	// Bind the model's VAO and draw it
+	glBindVertexArray(const_cast<Model&>(model).vao_id());
+	glDrawArrays(GL_TRIANGLES, 0, model.vertex_count());
+	glBindVertexArray(0);
+
+	// Reset the shader program
+	glUseProgram(0);
+}

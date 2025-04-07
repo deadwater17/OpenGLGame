@@ -1,18 +1,18 @@
+#pragma once  
+#include <glm/gtc/matrix_transform.hpp>  
+#include <SDL2/SDL.h>  
+#include "Model.h"
 
-/*
-#pragma once
-#include <glm/gtc/matrix_transform.hpp>
+struct World;  
 
-struct World;
+struct Player  
+{  
+	Player(World* _world);  
+    void update();  
+    void display();  
 
-struct Player
-{
-    Player(World* _world);
-    void update();
-    void display();
-
-private:
-    World* m_world;
-    glm::vec3 m_pos;
+private:  
+	bool m_damaged = false;
+	World* m_world;  
+	glm::vec3 m_pos;  
 };
-*/
