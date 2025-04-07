@@ -19,7 +19,8 @@ void Player::display()
     }
     else
     {
-        m_world->light.draw(m_world->playermodel,m_pos);
+        m_world->light.draw(m_world->playermodel,playerPos);
+		std::cout << "light.draw" << std::endl;
     }
 }
 

@@ -234,7 +234,8 @@ void mainLoop(SDL_Window* window, GLuint programId, Player& player, Texture& pla
         glBindTexture(GL_TEXTURE_2D, playerTex.id());
 
         glEnable(GL_DEPTH_TEST);
-        player.m_world->light.draw(player, player.playerPos); // Use Shader::draw method
+        // this line causes model to load but idk where
+        //player.m_world->light.draw(player, player.playerPos); // Use Shader::draw method
         glDrawArrays(GL_TRIANGLES, 0, player.vertex_count());
         glDisable(GL_CULL_FACE);
 
