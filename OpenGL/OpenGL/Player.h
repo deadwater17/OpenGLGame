@@ -5,7 +5,7 @@
 
 struct World;  
 
-struct Player  
+struct Player : public Model
 {  
 	Player(World* _world);  
     void update();  

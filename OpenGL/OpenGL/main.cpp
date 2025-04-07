@@ -9,8 +9,8 @@
 #include "Texture.h"
 #include "Triangle.h"
 #include "Shader.h"
-
 #include "World.h"
+#include "Player.h"
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
@@ -22,7 +22,7 @@ void initializeGLEW();
 GLuint createShaderProgram(const GLchar* vertexShaderSrc, const GLchar* fragmentShaderSrc);
 GLuint createVBO(const GLfloat* data, size_t dataSize);
 GLuint createVAO(GLuint positionsVboID, GLuint colorsVboId);
-void mainLoop(SDL_Window* window, GLuint programId, Model& cat, Texture& catTex, World& world);
+void mainLoop(SDL_Window* window, GLuint programId, Player& player, Texture& playerTex, World& world);
 
 
 int main()
@@ -68,7 +68,7 @@ int main()
         "vec3 specular = spec * specularColor;              " \
         "                                                   " \
         "vec4 viewPos = inverse(u_View) * vec4 (0,0,0,1);   " \
-        ""\
+        "                                                   " \
         "vec4 tex = texture2D (u_Texture, v_TexCoord);      " \
         "vec3 lighting = diffuse + specular;                " \
         "gl_FragColor = vec4(lighting,1)* tex;              " \
@@ -95,15 +95,17 @@ int main()
 
 
     GLuint programId = createShaderProgram(vertexShaderSrc, fragmentShaderSrc);
-    Model cat("curuthers.obj");
-    Texture catTex("Whiskers_diffuse.png");
+    //Model cat("curuthers.obj");
+    //Texture catTex("Whiskers_diffuse.png");
     World world(vertexShaderSrc, fragmentShaderSrc);
+    Player player(&world); // Instantiate the Player object
+    Texture playerTex("Whiskers_diffuse.png");
 
     GLuint positionsVboID = createVBO(positions, sizeof(positions));
     GLuint colorsVboId = createVBO(colors, sizeof(colors));
     GLuint vaoId = createVAO(positionsVboID, colorsVboId);
 
-    mainLoop(window, programId, cat, catTex, world);
+    mainLoop(window, programId, player, playerTex, world);
 
     return 0;
 }
@@ -166,7 +168,7 @@ GLuint createVAO(GLuint positionsVboID, GLuint colorsVboId) {
     return vaoId;
 }
 
-void mainLoop(SDL_Window* window, GLuint programId, Model& cat, Texture& catTex, World& world) {
+void mainLoop(SDL_Window* window, GLuint programId, Player& player, Texture& playerTex, World& world) {
     GLint modelLoc = glGetUniformLocation(programId, "u_Model");
     GLint projectionLoc = glGetUniformLocation(programId, "u_Projection");
 
@@ -195,7 +197,7 @@ void mainLoop(SDL_Window* window, GLuint programId, Model& cat, Texture& catTex,
         world.render();
 
         glUseProgram(programId);
-        glBindVertexArray(cat.vao_id());
+        glBindVertexArray(player.vao_id());
 
         glm::mat4 projection = glm::perspective(glm::radians(120.0f),
             (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 100.0f);
@@ -208,10 +210,10 @@ void mainLoop(SDL_Window* window, GLuint programId, Model& cat, Texture& catTex,
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
-        glBindTexture(GL_TEXTURE_2D, catTex.id());
+        glBindTexture(GL_TEXTURE_2D, playerTex.id());
 
         glEnable(GL_DEPTH_TEST);
-        glDrawArrays(GL_TRIANGLES, 0, cat.vertex_count());
+        glDrawArrays(GL_TRIANGLES, 0, player.vertex_count());
         glDisable(GL_CULL_FACE);
 
         SDL_GL_SwapWindow(window);

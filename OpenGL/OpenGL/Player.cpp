@@ -4,6 +4,7 @@
 Player::Player(World* _world)
     : m_world(_world)
     , m_pos(0,0,0)
+    , Model("curuthers.obj")
 { }
 
 void Player::update()
