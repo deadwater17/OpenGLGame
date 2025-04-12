@@ -19,6 +19,4 @@ struct Player : public Model
 private:  
 	bool m_damaged = false;
 	float m_speed = 1.0f;
-
-
 };

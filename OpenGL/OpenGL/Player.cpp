@@ -9,7 +9,9 @@ Player::Player(World* _world)
 { }
 
 void Player::update()
-{ }
+{ 
+    
+}
 
 void Player::display()
 {
