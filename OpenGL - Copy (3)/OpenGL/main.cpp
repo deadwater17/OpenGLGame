@@ -181,17 +181,15 @@ void mainLoop(SDL_Window* window, GLuint programId, Player& player, Texture& pla
         SDL_Event ev = { 0 };
         while (SDL_PollEvent(&ev))
         {
-            if (ev.type == SDL_QUIT) 
+            if (ev.type == SDL_QUIT)
             {
                 quit = true;
             }
-            else if (ev.type == SDL_KEYDOWN || ev.type == SDL_KEYUP) 
+            else if (ev.type == SDL_KEYDOWN || ev.type == SDL_KEYUP)
             {
                 world.keyboard[ev.key.keysym.scancode] = (ev.type == SDL_KEYDOWN);
             }
         }
-		world.handleInput();
-
         // Get the current state of the keyboard
         const Uint8* state = SDL_GetKeyboardState(NULL);
 
@@ -207,7 +205,8 @@ void mainLoop(SDL_Window* window, GLuint programId, Player& player, Texture& pla
         }
         if (state[SDL_SCANCODE_D]) {
             std::cout << "D key is pressed" << std::endl;
-        }
+        }		
+        world.handleInput();
 
         SDL_GetWindowSize(window, &width, &height);
         glViewport(0, 0, width, height);
