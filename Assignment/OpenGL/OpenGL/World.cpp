@@ -5,18 +5,17 @@ World::World(const GLchar* VertexSrc, const GLchar* FragmentSrc)
 	, keyboard(SDL_NUM_SCANCODES, 0)
 	, playermodel("curuthers.obj")
 	, basic(VertexSrc, FragmentSrc)
-	, worldPos(0.0f, 0.0f, 0.0f)
-{ }
 
-void World::update()
-{
-	player.update();
-	render();
-}
+{ }
 
 void World::render()
 {
 	glUseProgram(basic.getID());
+	player.update();
+}
 
-	player.display();
+void World::handleInput(float dt) 
+{
+	player.userInput(keyboard, dt);
+	//std::cout << "moving" << std::endl;
 }

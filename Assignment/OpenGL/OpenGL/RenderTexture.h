@@ -54,6 +54,9 @@ inline RenderTexture::~RenderTexture()
 	glDeleteFramebuffers;
 	glDeleteTextures;
 	glDeleteRenderbuffers;
+	glDeleteFramebuffers(1, &m_fboId);
+	glDeleteTextures(1, &m_texId);
+	glDeleteRenderbuffers(1, &m_rboId);
 }
 
 void RenderTexture::bind()

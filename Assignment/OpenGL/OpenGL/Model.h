@@ -21,12 +21,7 @@ struct Model
     GLsizei vertex_count() const;
     GLuint vao_id();
 
-    glm::vec3 getPosition() const { return position; }
-    void setPosition(const glm::vec3& pos) { position = pos; }
-
 private:
-    glm::vec3 position;
-
     struct Vertex
     {
         Vertex();

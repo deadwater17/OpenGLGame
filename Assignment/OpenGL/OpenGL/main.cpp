@@ -7,11 +7,9 @@
 
 #include "Model.h"
 #include "Texture.h"
-#include "Triangle.h"
 #include "Shader.h"
 #include "World.h"
 #include "Player.h"
-#include "Camera.h"
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
@@ -23,7 +21,7 @@ void initializeGLEW();
 GLuint createShaderProgram(const GLchar* vertexShaderSrc, const GLchar* fragmentShaderSrc);
 GLuint createVBO(const GLfloat* data, size_t dataSize);
 GLuint createVAO(GLuint positionsVboID, GLuint colorsVboId);
-void mainLoop(SDL_Window* window, GLuint programId, Player& player, Texture& playerTex, World& world, Camera& camera);
+void mainLoop(SDL_Window* window, GLuint programId, Player& player, Texture& playerTex, World& world);
 
 
 int main()
@@ -32,9 +30,9 @@ int main()
     initializeGLEW();
 
     const GLfloat positions[] = {
-    0.0f, 0.5f, 0.0f,
-    -0.5f, -0.5f, 0.0f,
-    0.5f, -0.5f, 0.0f
+        0.0f, 0.5f, 0.0f,
+        -0.5f, -0.5f, 0.0f,
+        0.5f, -0.5f, 0.0f
     };
 
     const GLfloat colors[] = {
@@ -94,7 +92,6 @@ int main()
         "v_FragPos = vec3(u_Model * vec4(a_Position, 1.0));" \
         "}                                      ";
 
-    Camera camera;
 
     GLuint programId = createShaderProgram(vertexShaderSrc, fragmentShaderSrc);
     //Model cat("curuthers.obj");
@@ -107,7 +104,7 @@ int main()
     GLuint colorsVboId = createVBO(colors, sizeof(colors));
     GLuint vaoId = createVAO(positionsVboID, colorsVboId);
 
-    mainLoop(window, programId, player, playerTex, world, camera);
+    mainLoop(window, programId, player, playerTex, world);
 
     return 0;
 }
@@ -170,7 +167,7 @@ GLuint createVAO(GLuint positionsVboID, GLuint colorsVboId) {
     return vaoId;
 }
 
-void mainLoop(SDL_Window* window, GLuint programId, Player& player, Texture& playerTex, World& world, Camera& camera) {
+void mainLoop(SDL_Window* window, GLuint programId, Player& player, Texture& playerTex, World& world) {
     GLint projectionLoc = glGetUniformLocation(programId, "u_Projection");
     GLint modelLoc = glGetUniformLocation(programId, "u_Model"); // Get the location of the u_Model uniform
 
@@ -179,7 +176,14 @@ void mainLoop(SDL_Window* window, GLuint programId, Player& player, Texture& pla
     int width = 0;
     int height = 0;
 
+    Uint32 lastTime = SDL_GetTicks();
+
     while (!quit) {
+
+        Uint32 currentTime = SDL_GetTicks();
+        float dt = (currentTime - lastTime) / 1000.0f; // Convert to seconds
+        lastTime = currentTime;
+
         SDL_Event ev = { 0 };
         while (SDL_PollEvent(&ev)) {
             if (ev.type == SDL_QUIT) {
@@ -190,7 +194,7 @@ void mainLoop(SDL_Window* window, GLuint programId, Player& player, Texture& pla
             }
         }
         
-        world.update();
+        world.handleInput(dt); // Handle input for the world and player
 
         SDL_GetWindowSize(window, &width, &height);
         glViewport(0, 0, width, height);
@@ -199,30 +203,37 @@ void mainLoop(SDL_Window* window, GLuint programId, Player& player, Texture& pla
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glUseProgram(programId);
-		glBindVertexArray(player.vao_id());
+		//glBindVertexArray(player.vao_id());
 
-        camera.cameraPos = glm::perspective(glm::radians(90.0f),
-            (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 100.0f);
 
-        glm::mat4 model(1.0f);
+        glm::mat4 view = glm::mat4(1.0f);  // Identity matrix
+        GLint viewLoc = glGetUniformLocation(programId, "u_View");
+        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+
+
+        glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, player.playerPos); // Use player's model position
-        //model = glm::rotate(model, glm::radians(angle), glm::vec3(0, 1, 0));  // uneeded, just rotates the model 
-        //angle += 0.1f;
+        //model = glm::rotate(model, glm::radians(angle), glm::vec3(0, 1, 0));
+        angle += 0.1f;
 
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); // Set the model matrix
-        glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(camera.cameraPos));
+        //glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); // Set the model matrix
+        
+        //### PROJECTION MATRIX ( MOVED TO SHADER )
+        //glm::mat4 projection = glm::perspective(glm::radians(120.0f),
+        //    (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 100.0f);
+        //glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
         glBindTexture(GL_TEXTURE_2D, playerTex.id());
 
         glEnable(GL_DEPTH_TEST);
         //player.m_world->light.draw(player, player.playerPos); // Use Shader::draw method
-        glDrawArrays(GL_TRIANGLES, 0, player.vertex_count());
+        //glDrawArrays(GL_TRIANGLES, 0, player.vertex_count());
         glDisable(GL_CULL_FACE);
+
+        world.render();
 
         SDL_GL_SwapWindow(window);
 
-        // Debug output to verify position
-        std::cout << "Rendering player at position: (" << player.playerPos.x << ", " << player.playerPos.y << ", " << player.playerPos.z << ")" << std::endl;
-		std::cout << "Rendering world position : (" << world.worldPos.x << ", " << world.worldPos.y << ", " << world.worldPos.z << ")" << std::endl;
-    }
+
+     }
 }
