@@ -8,9 +8,7 @@ struct Enemy;
 struct World
 {
 	Shader basic;
-	Shader light;
-	//Shader gui;
-	//Shader pulse;
+
 	std::vector<int> keyboard;
 
 	Model playermodel;
@@ -20,5 +18,5 @@ struct World
 
 	World(const GLchar* VertexSrc, const GLchar* FragmentSrc);
 	void render();
-	void handleInput();
+	void handleInput(float dt);
 };

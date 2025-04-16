@@ -7,7 +7,6 @@
 
 #include "Model.h"
 #include "Texture.h"
-#include "Triangle.h"
 #include "Shader.h"
 #include "World.h"
 #include "Player.h"
@@ -177,7 +176,14 @@ void mainLoop(SDL_Window* window, GLuint programId, Player& player, Texture& pla
     int width = 0;
     int height = 0;
 
+    Uint32 lastTime = SDL_GetTicks();
+
     while (!quit) {
+
+        Uint32 currentTime = SDL_GetTicks();
+        float dt = (currentTime - lastTime) / 1000.0f; // Convert to seconds
+        lastTime = currentTime;
+
         SDL_Event ev = { 0 };
         while (SDL_PollEvent(&ev)) {
             if (ev.type == SDL_QUIT) {
@@ -188,7 +194,7 @@ void mainLoop(SDL_Window* window, GLuint programId, Player& player, Texture& pla
             }
         }
         
-        world.handleInput(); // Handle input for the world and player
+        world.handleInput(dt); // Handle input for the world and player
 
         SDL_GetWindowSize(window, &width, &height);
         glViewport(0, 0, width, height);
@@ -196,32 +202,38 @@ void mainLoop(SDL_Window* window, GLuint programId, Player& player, Texture& pla
         glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        world.render();
-
         glUseProgram(programId);
-		glBindVertexArray(player.vao_id());
+		//glBindVertexArray(player.vao_id());
 
-        glm::mat4 projection = glm::perspective(glm::radians(120.0f),
-            (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 100.0f);
 
-        glm::mat4 model(1.0f);
+        glm::mat4 view = glm::mat4(1.0f);  // Identity matrix
+        GLint viewLoc = glGetUniformLocation(programId, "u_View");
+        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+
+
+        glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, player.playerPos); // Use player's model position
         //model = glm::rotate(model, glm::radians(angle), glm::vec3(0, 1, 0));
         angle += 0.1f;
 
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); // Set the model matrix
-        glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
+        //glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); // Set the model matrix
+        
+        //### PROJECTION MATRIX ( MOVED TO SHADER )
+        //glm::mat4 projection = glm::perspective(glm::radians(120.0f),
+        //    (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 100.0f);
+        //glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
         glBindTexture(GL_TEXTURE_2D, playerTex.id());
 
         glEnable(GL_DEPTH_TEST);
         //player.m_world->light.draw(player, player.playerPos); // Use Shader::draw method
-        glDrawArrays(GL_TRIANGLES, 0, player.vertex_count());
+        //glDrawArrays(GL_TRIANGLES, 0, player.vertex_count());
         glDisable(GL_CULL_FACE);
+
+        world.render();
 
         SDL_GL_SwapWindow(window);
 
-        // Debug output to verify position
-        std::cout << "Rendering player at position: (" << player.playerPos.x << ", " << player.playerPos.y << ", " << player.playerPos.z << ")" << std::endl;
-    }
+
+     }
 }
