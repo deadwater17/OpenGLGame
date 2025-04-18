@@ -1,5 +1,5 @@
-#include "BoxCollider.h"
-
+//#include "BoxCollider.h"
+/*
 bool aabb_collision(const glm::vec3& _a, const glm::vec3& _as, const glm::vec3& _b, const glm::vec3& _bs)
 {
     glm::vec3 ahs = _as / 2.0f;
@@ -80,3 +80,4 @@ glm::vec3 aabb_response(glm::vec3& _a, const glm::vec3& _as, const glm::vec3& _b
     }
     return _a;
 }
+*/
