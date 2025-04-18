@@ -80,13 +80,14 @@ int main()
         "attribute vec3 a_Normal;               " \
         "uniform mat4 u_Projection;             " \
         "uniform mat4 u_Model;                  " \
+        "uniform mat4 u_View;                   " \
         "                                       " \
         "varying vec3 v_FragPos;                " \
         "varying vec3 v_Normal;                 " \
         "varying vec2 v_TexCoord;               " \
         "void main()                            " \
         "{                                      " \
-        " gl_Position = u_Projection * u_Model * vec4(a_Position, 1.0); " \
+        " gl_Position = u_Projection * u_View * u_Model * vec4(a_Position, 1.0); " \
         "v_TexCoord = a_TexCoord;               " \
         "                                       " \
         "v_Normal = mat3(u_Model) * a_Normal;   " \
@@ -98,7 +99,7 @@ int main()
 
     World world(vertexShaderSrc, fragmentShaderSrc);
     Player player(&world); // Instantiate the Player object
-    Camera camera(&player, &world);
+    Shader shader(vertexShaderSrc, fragmentShaderSrc, &player, &world);
     
     Texture playerTex("Whiskers_diffuse.png");
 

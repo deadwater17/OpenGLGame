@@ -14,7 +14,7 @@ void Player::update()
 
 void Player::display()
 {
-    m_world->basic.draw(m_world->playermodel,playerPos);
+    m_world->basic.draw(m_world->playermodel,playerPos, m_world->camera);
     //std::cout << "draws model" << std::endl;
 }
 

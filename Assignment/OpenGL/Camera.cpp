@@ -1,7 +1,9 @@
 #include "Camera.h"
 
 Camera::Camera(Player* player, World* world)
-    : player(world), m_player(player)
+    : player(world), 
+    m_player(player),
+    CameraPos(0,0,0)
 {
 
 }
@@ -23,3 +25,5 @@ void Camera::getPlayerPos()
     }
     std::cout << "Camera x: " << CameraPos.x << " ,camera z: " << CameraPos.z<< std::endl;
 }
+
+
