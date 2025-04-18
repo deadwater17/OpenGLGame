@@ -2,9 +2,6 @@
 #include <iostream>
 #include <vector>
 #include <GL/glew.h>
-#include <glm/gtc/type_ptr.hpp>
-#include "Model.h"
-
 
 class Shader
 {
@@ -15,8 +12,6 @@ public:
 	GLuint compileShader(const char* src, GLenum type);
 	
 	GLuint getID() const { return programId; };
-
-	void draw(const Model& model, const glm::vec3& position);
 
 private:
 	GLuint programId;

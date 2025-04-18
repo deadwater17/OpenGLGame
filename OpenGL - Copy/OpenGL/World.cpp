@@ -1,9 +1,21 @@
-
-/*
 #include "World.h"
 
-World::World()
-	: player(this),
-	, keyboard(200)
+World::World(const GLchar* VertexSrc, const GLchar* FragmentSrc)
+	: player(this)
+	, keyboard(SDL_NUM_SCANCODES, 0)
+	, playermodel("curuthers.obj")
+	, basic(VertexSrc, FragmentSrc)
+
 { }
-*/
+
+void World::render()
+{
+	glUseProgram(basic.getID());
+	player.update();
+}
+
+void World::handleInput(float dt) 
+{
+	player.userInput(keyboard, dt);
+	//std::cout << "moving" << std::endl;
+}

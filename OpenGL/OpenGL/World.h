@@ -14,7 +14,8 @@ struct World
 	Model playermodel;
 
 	Player player;
-	//std::vector<Enemy> enemies;
+	
+	std::vector<Enemy> enemies;
 
 	World(const GLchar* VertexSrc, const GLchar* FragmentSrc);
 	void render();
