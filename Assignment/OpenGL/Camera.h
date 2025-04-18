@@ -4,7 +4,6 @@
 #include "Player.h"
 #include "Shader.h"
 
-
 struct World;
 
 struct Camera
@@ -23,5 +22,5 @@ private:
 	glm::vec3 CameraPos;
 	Player* m_player;
 	Shader* m_shader;
-};
 
+};

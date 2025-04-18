@@ -1,3 +1,3 @@
 Issues:
 
-Figure out what is the Shader file for, and then figure out where to put stuff
+Copy all main files and paste it into DS.

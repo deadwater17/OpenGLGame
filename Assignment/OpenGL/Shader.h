@@ -4,7 +4,8 @@
 #include <GL/glew.h>
 #include <glm/gtc/type_ptr.hpp>
 #include "Model.h"
-#include "Camera.h"
+
+struct Camera;
 
 class Shader
 {

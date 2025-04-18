@@ -8,9 +8,7 @@ Camera::Camera(Player* player, World* world, Shader* shader)
     m_player(player),
     CameraPos(0,0,0),
 	m_shader(shader)
-{
-
-}
+{}
 
 Camera::~Camera()   {}
 

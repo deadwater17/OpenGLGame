@@ -10,7 +10,6 @@
 #include "Shader.h"
 #include "World.h"
 #include "Player.h"
-#include "Camera.h"
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
@@ -80,14 +79,13 @@ int main()
         "attribute vec3 a_Normal;               " \
         "uniform mat4 u_Projection;             " \
         "uniform mat4 u_Model;                  " \
-        "uniform mat4 u_View;                   " \
         "                                       " \
         "varying vec3 v_FragPos;                " \
         "varying vec3 v_Normal;                 " \
         "varying vec2 v_TexCoord;               " \
         "void main()                            " \
         "{                                      " \
-        " gl_Position = u_Projection * u_View * u_Model * vec4(a_Position, 1.0); " \
+        " gl_Position = u_Projection * u_Model * vec4(a_Position, 1.0); " \
         "v_TexCoord = a_TexCoord;               " \
         "                                       " \
         "v_Normal = mat3(u_Model) * a_Normal;   " \
@@ -96,10 +94,10 @@ int main()
 
 
     GLuint programId = createShaderProgram(vertexShaderSrc, fragmentShaderSrc);
-
+    //Model cat("curuthers.obj");
+    //Texture catTex("Whiskers_diffuse.png");
     World world(vertexShaderSrc, fragmentShaderSrc);
     Player player(&world); // Instantiate the Player object
-    
     Texture playerTex("Whiskers_diffuse.png");
 
     GLuint positionsVboID = createVBO(positions, sizeof(positions));
@@ -205,6 +203,7 @@ void mainLoop(SDL_Window* window, GLuint programId, Player& player, Texture& pla
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glUseProgram(programId);
+		//glBindVertexArray(player.vao_id());
 
 
         glm::mat4 view = glm::mat4(1.0f);  // Identity matrix
@@ -214,10 +213,21 @@ void mainLoop(SDL_Window* window, GLuint programId, Player& player, Texture& pla
 
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, player.playerPos); // Use player's model position
+        //model = glm::rotate(model, glm::radians(angle), glm::vec3(0, 1, 0));
+        angle += 0.1f;
+
+        //glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model)); // Set the model matrix
+        
+        //### PROJECTION MATRIX ( MOVED TO SHADER )
+        //glm::mat4 projection = glm::perspective(glm::radians(120.0f),
+        //    (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 100.0f);
+        //glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
         glBindTexture(GL_TEXTURE_2D, playerTex.id());
 
         glEnable(GL_DEPTH_TEST);
+        //player.m_world->light.draw(player, player.playerPos); // Use Shader::draw method
+        //glDrawArrays(GL_TRIANGLES, 0, player.vertex_count());
         glDisable(GL_CULL_FACE);
 
         world.render();
