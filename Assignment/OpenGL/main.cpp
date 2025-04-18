@@ -99,7 +99,7 @@ int main()
 
     World world(vertexShaderSrc, fragmentShaderSrc);
     Player player(&world); // Instantiate the Player object
-    Shader shader(vertexShaderSrc, fragmentShaderSrc, &player, &world);
+//    Shader shader(vertexShaderSrc, fragmentShaderSrc, &player, &world);
     
     Texture playerTex("Whiskers_diffuse.png");
 

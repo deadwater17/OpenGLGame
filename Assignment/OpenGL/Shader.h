@@ -9,7 +9,7 @@
 class Shader
 {
 public:
-	Shader(const char* vertexPath, const char* fragmentPath, &player, &world);
+	Shader(const char* vertexPath, const char* fragmentPath);
 	~Shader();
 
 	GLuint compileShader(const char* src, GLenum type);
@@ -22,6 +22,4 @@ private:
 	GLuint programId;
 	GLuint vertexShaderId;
 	GLuint fragmentShaderId;
-
-	Camera camera;
 };
