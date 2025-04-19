@@ -36,8 +36,8 @@ void Camera::camInit(const glm::vec3& position, const Camera& camera)
     glm::vec3 camPos = camera.getCameraPosition();
     glm::mat4 viewMatrix = glm::lookAt(
         camPos,                     // Camera position
-        m_player->playerPos, // Looking down -Z axis (adjust as needed)
-        glm::vec3(0, 0, 3)          
+        camPos + glm::vec3(0, 0, 0), // Looking down -Z axis (adjust as needed)
+        glm::vec3(0, 0, 0)          // Up vector
 	);
 
     // Projection

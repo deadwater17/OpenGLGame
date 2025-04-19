@@ -206,6 +206,12 @@ void mainLoop(SDL_Window* window, GLuint programId, Player& player, Texture& pla
 
         glUseProgram(programId);
 
+
+        glm::mat4 view = glm::mat4(1.0f);  // Identity matrix
+        GLint viewLoc = glGetUniformLocation(programId, "u_View");
+        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+
+
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, player.playerPos); // Use player's model position
 
