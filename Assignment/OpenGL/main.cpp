@@ -11,6 +11,7 @@
 #include "World.h"
 #include "Player.h"
 #include "Camera.h"
+#include "Skybox.h"
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
@@ -102,6 +103,7 @@ int main()
 	Shader shader(vertexShaderSrc, fragmentShaderSrc);
 
     Texture playerTex("Whiskers_diffuse.png");
+    Skybox skybox("SpaceCubeMap.png");
 
     GLuint positionsVboID = createVBO(positions, sizeof(positions));
     GLuint colorsVboId = createVBO(colors, sizeof(colors));
