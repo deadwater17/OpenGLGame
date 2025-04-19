@@ -17,7 +17,7 @@ struct World
 	Player player;
 	Camera camera;
 	
-	//std::vector<Enemy> enemies;
+	//std::vector<Enemy> m_enemies;
 
 	World(const GLchar* VertexSrc, const GLchar* FragmentSrc);
 	void render();
