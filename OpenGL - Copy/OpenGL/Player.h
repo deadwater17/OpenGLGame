@@ -17,5 +17,5 @@ struct Player : public Model
 	glm::vec3 playerPos;
 private:  
 	bool m_damaged = false;
-	float m_speed = 0.05f;
+	float m_speed = 0.1f;
 };
