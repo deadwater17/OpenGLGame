@@ -8,19 +8,30 @@ struct World;
 
 struct Camera
 {
-	Camera(Player* player, World* world, Shader* shader);
+	Camera(Player* player, Shader* shader);
 	~Camera();
-	void update();
-	void getPlayerPos();
 
-	const glm::vec3 getCameraPosition()	const { return CameraPos; }
-	Player player;
+    void update(float dt = 0.0f);
 
-	void camInit(const glm::vec3& position, const Camera& camera);
+    // Camera properties
+    glm::vec3 position = glm::vec3(0.0f);
+    float distanceFromPlayer = 5.0f;
+    float heightFromPlayer = 3.0f;
+    float fov = 75.0f;
+
+    // Get view matrix for other calculations
+    const glm::mat4& getViewMatrix() const { return viewMatrix; }
+    const glm::mat4& getProjectionMatrix() const { return projectionMatrix; }
+    
 
 private:
-	glm::vec3 CameraPos;
-	Player* m_player;
-	Shader* m_shader;
+    void updateProjection();
+    void updateView();
+    void sendToShader();
 
+    Player* m_player = nullptr;
+    Shader* m_shader = nullptr;
+
+    glm::mat4 viewMatrix;
+    glm::mat4 projectionMatrix;
 };

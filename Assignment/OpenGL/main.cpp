@@ -99,7 +99,8 @@ int main()
 
     World world(vertexShaderSrc, fragmentShaderSrc);
     Player player(&world); // Instantiate the Player object
-    
+	Shader shader(vertexShaderSrc, fragmentShaderSrc);
+
     Texture playerTex("Whiskers_diffuse.png");
 
     GLuint positionsVboID = createVBO(positions, sizeof(positions));
@@ -172,6 +173,8 @@ GLuint createVAO(GLuint positionsVboID, GLuint colorsVboId) {
 void mainLoop(SDL_Window* window, GLuint programId, Player& player, Texture& playerTex, World& world) {
     GLint projectionLoc = glGetUniformLocation(programId, "u_Projection");
     GLint modelLoc = glGetUniformLocation(programId, "u_Model"); // Get the location of the u_Model uniform
+
+
 
     bool quit = false;
     float angle = 0.0f;

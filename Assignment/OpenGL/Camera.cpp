@@ -1,44 +1,55 @@
 #include "Camera.h"
 
-#define WINDOW_WIDTH 800
-#define WINDOW_HEIGHT 600
+Camera::Camera(Player* player, Shader* shader)
+    : m_player(player),
+    m_shader(shader)
+{
+    // Initialize matrices
+    updateProjection();
+}
 
-Camera::Camera(Player* player, World* world, Shader* shader)
-    : player(world), 
-    m_player(player),
-    CameraPos(0,0,0),
-	m_shader(shader)
+Camera::~Camera()
 {}
 
-Camera::~Camera()   {}
-
-void Camera::update()
+void Camera::update(float dt)
 {
-    getPlayerPos();
+    if (!m_player || !m_shader) return;
+
+    updateView();
+    sendToShader();
 }
 
-void Camera::getPlayerPos()
+void Camera::updateView()
 {
-    if (m_player)
-    {
-        // Update the camera position to follow the player's position
-        CameraPos = m_player->playerPos + glm::vec3(0.0f, 0.0f, 3.0f);
-    }
-    //std::cout << "Camera x: " << CameraPos.x << " ,camera z: " << CameraPos.z<< std::endl;
+    if (!m_player) return;
+
+    // Calculate camera position behind and above player
+    position = m_player->playerPos;
+    position.z += distanceFromPlayer; // Move back
+    position.y += heightFromPlayer;   // Move up
+
+    // Create view matrix looking at player
+    viewMatrix = glm::lookAt(
+        position,                   // Camera position
+        m_player->playerPos,        // Look at player
+        glm::vec3(0.0f, 1.0f, 0.0f) // Up vector
+    );
 }
 
-void Camera::camInit(const glm::vec3& position, const Camera& camera)
+void Camera::updateProjection()
 {
-    glm::mat4 projectionMatrix = glm::perspective(glm::radians(120.0f),
-        (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 100.0f);
+    // Standard perspective projection
+    projectionMatrix = glm::perspective(
+        glm::radians(fov),          // Field of view
+        800.0f / 600.0f,            // Aspect ratio (update if window resizes)
+        0.1f,                       // Near plane
+        100.0f                      // Far plane
+    );
+}
 
-    // Set up the camera matrix
-    glm::vec3 camPos = camera.getCameraPosition();
-    glm::mat4 viewMatrix = glm::lookAt(
-        camPos,                     // Camera position
-        m_player->playerPos, // Looking down -Z axis (adjust as needed)
-        glm::vec3(0, 0, 3)          
-	);
+void Camera::sendToShader()
+{
+    if (!m_shader) return;
 
     // Projection
     GLint projLoc = glGetUniformLocation(m_shader->getID(), "u_Projection");
@@ -50,7 +61,5 @@ void Camera::camInit(const glm::vec3& position, const Camera& camera)
 
     // Camera Pos
     GLint viewPosLoc = glGetUniformLocation(m_shader->getID(), "u_ViewPos");
-    glUniform3fv(viewPosLoc, 1, glm::value_ptr(camPos));
+    glUniform3fv(viewPosLoc, 1, glm::value_ptr(position));
 }
-
-

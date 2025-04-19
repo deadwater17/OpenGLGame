@@ -2,7 +2,7 @@
 
 World::World(const GLchar* VertexSrc, const GLchar* FragmentSrc)
 	: player(this)
-	, camera(&player, this,&basic)	
+	, camera(&player, &basic)	
 	, keyboard(SDL_NUM_SCANCODES, 0)
 	, playermodel("curuthers.obj")
 	, basic(VertexSrc, FragmentSrc)
