@@ -11,7 +11,6 @@
 #include "World.h"
 #include "Player.h"
 #include "Camera.h"
-#include "Skybox.h"
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
@@ -102,8 +101,9 @@ int main()
     Player player(&world); // Instantiate the Player object
 	Shader shader(vertexShaderSrc, fragmentShaderSrc);
 
+
     Texture playerTex("Whiskers_diffuse.png");
-    Skybox skybox("SpaceCubeMap.png");
+	Texture enemyTex("cm_tex.png");
 
     GLuint positionsVboID = createVBO(positions, sizeof(positions));
     GLuint colorsVboId = createVBO(colors, sizeof(colors));
@@ -115,7 +115,7 @@ int main()
 }
 
 SDL_Window* initializeSDL() {
-    SDL_Window* window = SDL_CreateWindow("Triangle",
+    SDL_Window* window = SDL_CreateWindow("OpenGLGame",
         SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
         WINDOW_WIDTH, WINDOW_HEIGHT,
         SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);

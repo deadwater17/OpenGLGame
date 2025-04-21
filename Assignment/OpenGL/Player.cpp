@@ -5,7 +5,7 @@ Player::Player(World* _world)
     : m_world(_world)
     , playerPos(0, 0, -3)
     , Model("curuthers.obj")
-{ }
+{}
 
 void Player::update()
 { 

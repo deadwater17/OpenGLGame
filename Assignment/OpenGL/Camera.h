@@ -15,7 +15,7 @@ struct Camera
 
     // Camera properties
     glm::vec3 position = glm::vec3(0.0f);
-    float distanceFromPlayer = 5.0f;
+    float distanceFromPlayer = 10.0f;
     float heightFromPlayer = 3.0f;
     float fov = 75.0f;
 

@@ -13,13 +13,18 @@ struct World
 	std::vector<int> keyboard;
 
 	Model playermodel;
+	Model plane;
+	Model enemyModel;
+
+	glm::vec3 enemyPos;
 
 	Player player;
 	Camera camera;
 	
-	//std::vector<Enemy> m_enemies;
-
 	World(const GLchar* VertexSrc, const GLchar* FragmentSrc);
 	void render();
 	void handleInput(float dt);
+
+	void drawing();
+
 };
