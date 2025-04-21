@@ -153,7 +153,6 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="RenderTexture.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>

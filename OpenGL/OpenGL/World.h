@@ -2,6 +2,7 @@
 #include "Shader.h"
 #include "Model.h"
 #include "Player.h"
+#include "Camera.h"
 
 struct Enemy;
 
@@ -12,11 +13,18 @@ struct World
 	std::vector<int> keyboard;
 
 	Model playermodel;
+	Model plane;
+	Model enemyModel;
+
+	glm::vec3 enemyPos;
 
 	Player player;
-	//std::vector<Enemy> enemies;
-
+	Camera camera;
+	
 	World(const GLchar* VertexSrc, const GLchar* FragmentSrc);
 	void render();
 	void handleInput(float dt);
+
+	void drawing();
+
 };

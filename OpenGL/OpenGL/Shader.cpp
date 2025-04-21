@@ -1,7 +1,6 @@
 #include "Shader.h"
 
-#define WINDOW_WIDTH 800
-#define WINDOW_HEIGHT 600
+
 
 Shader::Shader(const char* vertexSrc, const char* fragmentSrc)
 {
@@ -59,37 +58,21 @@ GLuint Shader::compileShader(const char* src, GLenum type) {
 	return shaderId;
 }
 
-void Shader::draw(const Model& model, const glm::vec3& position)
+void Shader::draw(const Model& model, const glm::vec3& position, const Camera& camera)
 {
-	std::cout << "Setting model matrix for position: ("
-		<< position.x << ", " << position.y << ", " << position.z << ")" << std::endl;
-
 	// Use the shader program for rendering the model
 	glUseProgram(getID());
-
-	glm::mat4 projectionMatrix = glm::perspective(glm::radians(120.0f),
-		(float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 100.0f);
 
 	// Set up the model transformation matrix
 	glm::mat4 modelMatrix = glm::mat4(1.0f);
 	modelMatrix = glm::translate(modelMatrix, position);
 
 	// Set the uniform variables for the shader
+	// Model
 	GLint modelLoc = glGetUniformLocation(getID(), "u_Model");
-	if (modelLoc == -1) std::cerr << "ERROR: u_Model not found in shader!" << std::endl;
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelMatrix));
-
-	GLint projLoc = glGetUniformLocation(programId, "u_Projection");
-	if (projLoc == -1) std::cerr << "ERROR: u_Projection not found!" << std::endl;
-	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
-
-
 
 	// Bind the model's VAO and draw it
 	glBindVertexArray(const_cast<Model&>(model).vao_id());
 	glDrawArrays(GL_TRIANGLES, 0, model.vertex_count());
-	//glBindVertexArray(0);
-
-	// Reset the shader program
-	//glUseProgram(0);
 }

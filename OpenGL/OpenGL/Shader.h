@@ -5,6 +5,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "Model.h"
 
+struct Camera;
 
 class Shader
 {
@@ -16,7 +17,7 @@ public:
 	
 	GLuint getID() const { return programId; };
 
-	void draw(const Model& model, const glm::vec3& position);
+	void draw(const Model& model, const glm::vec3& position, const Camera& camera);
 
 private:
 	GLuint programId;
