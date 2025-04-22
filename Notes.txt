@@ -1,3 +1,4 @@
 Issues:
+Currently working on the pLayer.cpp file
 
-Copy all main files and paste it into DS.
+Just need to allow texture and the model files send through and compiled
