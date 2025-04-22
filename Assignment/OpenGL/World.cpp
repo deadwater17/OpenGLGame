@@ -2,10 +2,10 @@
 
 World::World(const GLchar* VertexSrc, const GLchar* FragmentSrc)
 	: player(this)
-	, camera(&player, &basic)	
+	, camera(&player, &shader)	
 	, keyboard(SDL_NUM_SCANCODES, 0)
 	, playermodel("curuthers.obj")
-	, basic(VertexSrc, FragmentSrc)
+	, shader(VertexSrc, FragmentSrc)
 
 { 
 	enemyPos = glm::vec3 (3,0,-3);

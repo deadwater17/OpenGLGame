@@ -8,7 +8,9 @@ struct Enemy;
 
 struct World
 {
-	Shader basic;
+	Shader shader;
+	Player player;
+	Camera camera;
 
 	std::vector<int> keyboard;
 
@@ -18,8 +20,7 @@ struct World
 
 	glm::vec3 enemyPos;
 
-	Player player;
-	Camera camera;
+
 	
 	World(const GLchar* VertexSrc, const GLchar* FragmentSrc);
 	void render();

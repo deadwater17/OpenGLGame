@@ -17,7 +17,7 @@ public:
 	
 	GLuint getID() const { return programId; };
 
-	void draw(const Model& model, const glm::vec3& position, const Camera& camera);
+	void draw(const Model& model, const glm::vec3& position);
 
 private:
 	GLuint programId;
