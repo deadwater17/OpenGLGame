@@ -17,12 +17,12 @@ public:
 	void update(float dt);
 	void draw(Shader& shader);
 
-	const glm::vec3 getPosition() const { return m_position; }
+	glm::vec3 getPosition() const { return m_position; }
 
 private:
 	Model m_model;
 	Texture m_texture;
 	glm::vec3 m_position;
 	glm::vec3 m_velocity;
-	float m_speed = 1.0f;
+	float m_speed = 5.0f;
 };

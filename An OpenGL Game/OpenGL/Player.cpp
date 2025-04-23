@@ -3,7 +3,7 @@
 Player::Player(const std::string& modelPath, const std::string& texturePath)
 	: m_model(modelPath)
 	, m_texture(texturePath)
-	, m_position(0.0f, 0.0f, -3.0f)
+	, m_position(0.0f, 0.0f, 0.0f)
 	, m_velocity(0.0f)
 {
 
@@ -41,6 +41,8 @@ void Player::handleInput(const Uint8* keyboardState, float dt)
     {
         m_velocity = glm::normalize(m_velocity) * m_speed;
     }
+
+	std::cout << "Player: " <<m_position.x << " " << m_position.y << " " << m_position.z << std::endl;
 }
 
 void Player::draw(Shader& shader)

@@ -7,6 +7,7 @@
 #include "Shader.h"
 #include "Mesh.h"
 #include "Player.h"
+#include "Camera.h"
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
@@ -16,15 +17,18 @@ class World
 public:
 	World();
 	void update(float dt, const Uint8* keyboardState); 
-	void handleInput(float dt, const Uint8* keyboardState);
+
 	void render();
 
 private:
+	void handleInput(float dt, const Uint8* keyboardState);
+
 	Shader shader;
 	std::unique_ptr<Mesh> mesh;
 	Player player;
-
+	Camera camera;
+	
 	// Need to be implemented
 	//Enemy enemy;
-	//Camera camera;
+
 };

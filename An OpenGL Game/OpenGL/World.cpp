@@ -24,13 +24,14 @@ void World::update(float dt, const Uint8* keyboardState)
 {
     handleInput(dt, keyboardState);
 	player.update(dt);
+    camera.update(player.getPosition(), dt);
+    //enemy.update(dt);
+
 }
 
 void World::handleInput(float dt, const Uint8* keyboardState)
 {   
 	player.handleInput(keyboardState, dt);
-    //enemy.update(dt);
-    //camera.update();
 }
 
 
@@ -38,20 +39,17 @@ void World::render()
 {
     shader.use();
 
-    // Temporary identity matrices (until camera integrate)
+    // Projection
     //glm::mat4 projectionMatrix = glm::mat4(1.0f);
-    glm::mat4 viewMatrix = glm::mat4(1.0f);
     glm::mat4 projectionMatrix = glm::perspective(glm::radians(120.0f),
-       (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 100.0f);
-
-    //glm::mat4 projection = camera.getProjectionMatrix();
-    //glm::mat4 view = camera.getViewMatrix();
-
-	// Projection
+        (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 100.0f);
     GLint projLoc = glGetUniformLocation(shader.getID(), "u_Projection");
     glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 
+    //glm::mat4 projection = camera.getProjectionMatrix();
+
     // Camera
+    glm::mat4 viewMatrix = camera.getViewMatrix();
     GLint viewLoc = glGetUniformLocation(shader.getID(), "u_View");
     glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
 
