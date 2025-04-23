@@ -3,6 +3,8 @@
 Player::Player(const std::string& modelPath, const std::string& texturePath)
 	: m_model(modelPath)
 	, m_texture(texturePath)
+	, m_position(0.0f, 0.0f, -3.0f)
+	, m_velocity(0.0f)
 {
 
 }
@@ -26,11 +28,11 @@ void Player::handleInput(const Uint8* keyboardState, float dt)
     {
         m_velocity.z += 1.0f;
     }
-    if (keyboardState[SDL_SCANCODE_A] || keyboardState[SDL_SCANCODE_LEFT])
+    if (keyboardState[SDL_SCANCODE_A])
     {
         m_velocity.x -= 1.0f;
     }
-    if (keyboardState[SDL_SCANCODE_D] || keyboardState[SDL_SCANCODE_RIGHT])
+    if (keyboardState[SDL_SCANCODE_D])
     {
         m_velocity.x += 1.0f;
     }
@@ -39,8 +41,6 @@ void Player::handleInput(const Uint8* keyboardState, float dt)
     {
         m_velocity = glm::normalize(m_velocity) * m_speed;
     }
-        
-
 }
 
 void Player::draw(Shader& shader)
@@ -60,4 +60,6 @@ void Player::draw(Shader& shader)
     glBindVertexArray(m_model.vao_id());
     glDrawArrays(GL_TRIANGLES, 0, m_model.vertex_count());
     glBindVertexArray(0);
+
+	//std::cout << "Player is drawn" << std::endl;
 }

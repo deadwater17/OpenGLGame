@@ -1,4 +1,2 @@
 Issues:
-Currently working on the pLayer.cpp file
-
-Just need to allow texture and the model files send through and compiled
+added to use keyboard for the World, but need to adjust the player file for it and add keyboard use in main

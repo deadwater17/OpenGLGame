@@ -234,6 +234,7 @@ int main()
     }
 
     World world;
+    const Uint8* keyboard = nullptr;
 
 	bool quit = false;
     SDL_Event event;
@@ -253,15 +254,17 @@ int main()
 				quit = true;
 			}
 		}
+        SDL_PumpEvents();                      
+        keyboard = SDL_GetKeyboardState(nullptr);
 
 		glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
-        // Render your scene here
-        world.handleInput(deltaTime);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        world.update(deltaTime);
+        world.update(deltaTime, keyboard);
         world.render();
+
+        glEnable(GL_DEPTH_TEST);
+        glDisable(GL_CULL_FACE);
 
 		SDL_GL_SwapWindow(window);
 	}

@@ -3,7 +3,8 @@
 #include "Texture.h"
 #include "Shader.h"
 
-#include <GL/glew.h>
+
+#include <glm/gtc/type_ptr.hpp>
 #include <SDL2/SDL.h>
 
 class Player
