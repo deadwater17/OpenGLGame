@@ -1,2 +1,33 @@
+Roadmap:
+Create Window					(Done)
+Display 3D Player Model				(Done)
+Allow player to move based on keyboard inputs	(Done)
+Display 1 or more obstacles/Enemies		
+
+Provide camera - that face player, moves with it(Done)
+Texturing 					(Done)
+Use of matrices for viewing and lighting 	
+Make GUI / HUD for score
+Moving objects
+Basic lighting (i.e. diffuse and specular)
+2D collision with the objects
+
+Post processing
+Advance materials and Shaders
+Advance lighting and multiple lights
+Normal mapping
+Procedural texturing
+Dynamic Geometry
+Modelling / in-build editing tools
+
+Post processing effects - bloom, glow
+Parallax mapping, lighting calculations in tangent space
+Animation
+Image-based lighting, HDR lighting
+Motion blur, depth-of-field
+Deferred rendering
+
 Issues:
-added to use keyboard for the World, but need to adjust the player file for it and add keyboard use in main
+Now let's start working on the world, we will make a path for the player to run on
+
+Also what i want to implement, game like subway surfer
