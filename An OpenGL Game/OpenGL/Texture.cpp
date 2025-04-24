@@ -33,7 +33,13 @@ Texture::~Texture()
 	}
 }
 
-GLuint Texture::id()
+GLuint Texture::getID()
+{
+	bind();
+	return m_id;
+}
+
+ void Texture::bind() const
 {
 	if (!m_id)
 	{
@@ -57,6 +63,4 @@ GLuint Texture::id()
 		glBindTexture(GL_TEXTURE_2D, 0);
 		m_dirty = false;
 	}
-
-	return m_id;
 }

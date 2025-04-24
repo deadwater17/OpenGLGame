@@ -12,13 +12,14 @@ struct Texture
 	Texture(const std::string& _path);
 	~Texture();
 
-	GLuint id();
+	void bind() const;
+	GLuint getID();
 
 private:
 	std::vector<unsigned char> m_data;
-	GLuint m_id;
+	mutable GLuint m_id;
 	int m_width;
 	int m_height;
-	bool m_dirty;
+	mutable bool m_dirty;
 };
 

@@ -28,6 +28,4 @@ Motion blur, depth-of-field
 Deferred rendering
 
 Issues:
-Now let's start working on the world, we will make a path for the player to run on
-
-Also what i want to implement, game like subway surfer
+Issue with mesh

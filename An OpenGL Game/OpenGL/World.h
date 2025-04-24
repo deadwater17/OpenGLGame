@@ -8,6 +8,7 @@
 #include "Mesh.h"
 #include "Player.h"
 #include "Camera.h"
+#include "Road.h"
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
@@ -27,6 +28,7 @@ private:
 	std::unique_ptr<Mesh> mesh;
 	Player player;
 	Camera camera;
+	Road road;
 	
 	// Need to be implemented
 	//Enemy enemy;

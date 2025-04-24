@@ -56,7 +56,7 @@ void Player::draw(Shader& shader)
 
     // Bind texture
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, m_texture.id());
+    glBindTexture(GL_TEXTURE_2D, m_texture.getID());
 
     // Draw model
     glBindVertexArray(m_model.vao_id());

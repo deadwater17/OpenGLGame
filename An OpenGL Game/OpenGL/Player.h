@@ -19,6 +19,8 @@ public:
 
 	glm::vec3 getPosition() const { return m_position; }
 
+	float getSpeed() const { return m_speed; }
+
 private:
 	Model m_model;
 	Texture m_texture;
