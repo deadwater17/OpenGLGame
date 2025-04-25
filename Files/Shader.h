@@ -1,23 +1,16 @@
 #pragma once
+#include <GL/glew.h>
 #include <iostream>
 #include <vector>
-#include <GL/glew.h>
-#include <glm/gtc/type_ptr.hpp>
-#include "Model.h"
-
-struct Camera;
 
 class Shader
 {
 public:
-	Shader(const char* vertexPath, const char* fragmentPath);
+	Shader();
 	~Shader();
 
-	GLuint compileShader(const char* src, GLenum type);
-	
+	void use() const { glUseProgram(programId); };
 	GLuint getID() const { return programId; };
-
-	void draw(const Model& model, const glm::vec3& position, const Camera& camera);
 
 private:
 	GLuint programId;

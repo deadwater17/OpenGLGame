@@ -1,56 +1,31 @@
 #include "Camera.h"
 
-#define WINDOW_WIDTH 800
-#define WINDOW_HEIGHT 600
+#include <iostream>
 
-Camera::Camera(Player* player, World* world, Shader* shader)
-    : player(world), 
-    m_player(player),
-    CameraPos(0,0,0),
-	m_shader(shader)
+Camera::Camera()
+	: m_position(0.0f, 0.0f, -3.0f)
+	, m_target(0.0f)
+	, m_tilt(0.0f, 3.0f, 0.0f)
+	, m_distance(5.0f)
+	, m_smoothSpeed(5.0f)
 {}
 
-Camera::~Camera()   {}
+Camera::~Camera()
+{}
 
-void Camera::update()
+glm::mat4 Camera::getViewMatrix() const
 {
-    getPlayerPos();
+	return glm::lookAt(m_position, m_target, m_tilt);
 }
 
-void Camera::getPlayerPos()
+void Camera::update(const glm::vec3& target, float dt)
 {
-    if (m_player)
-    {
-        // Update the camera position to follow the player's position
-        CameraPos = m_player->playerPos + glm::vec3(0.0f, 0.0f, 3.0f);
-    }
-    //std::cout << "Camera x: " << CameraPos.x << " ,camera z: " << CameraPos.z<< std::endl;
+	m_target = target;
+
+	glm::vec3 desiredPosition = target - glm::vec3(0.0f, -2.5f, m_distance); 
+
+	// Smooth camera movement
+	m_position = glm::mix(m_position, desiredPosition, m_smoothSpeed *dt);
+
+	std::cout << "Camera: " << m_position.x << " " << m_position.y << " " << m_position.z << std::endl;
 }
-
-void Camera::camInit(const glm::vec3& position, const Camera& camera)
-{
-    glm::mat4 projectionMatrix = glm::perspective(glm::radians(120.0f),
-        (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 100.0f);
-
-    // Set up the camera matrix
-    glm::vec3 camPos = camera.getCameraPosition();
-    glm::mat4 viewMatrix = glm::lookAt(
-        camPos,                     // Camera position
-        camPos + glm::vec3(0, 0, 0), // Looking down -Z axis (adjust as needed)
-        glm::vec3(0, 0, 0)          // Up vector
-	);
-
-    // Projection
-    GLint projLoc = glGetUniformLocation(m_shader->getID(), "u_Projection");
-    glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
-
-    // Camera
-    GLint viewLoc = glGetUniformLocation(m_shader->getID(), "u_View");
-    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
-
-    // Camera Pos
-    GLint viewPosLoc = glGetUniformLocation(m_shader->getID(), "u_ViewPos");
-    glUniform3fv(viewPosLoc, 1, glm::value_ptr(camPos));
-}
-
-

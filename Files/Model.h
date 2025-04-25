@@ -1,13 +1,13 @@
+#pragma once
 #ifndef MODEL_H
 #define MODEL_H
-
 #include <GL/glew.h>
 #include <glm/glm.hpp>
-
 #include <string>
 #include <fstream>
 #include <vector>
-#include <iostream> // Include for debug output
+
+#include "Shader.h"
 
 struct Model
 {
@@ -20,6 +20,8 @@ struct Model
 
     GLsizei vertex_count() const;
     GLuint vao_id();
+
+    void draw(Shader& shader) const;
 
 private:
     struct Vertex
@@ -76,8 +78,6 @@ inline Model::Model(const std::string& _path)
     {
         throw std::runtime_error("Failed to open model [" + _path + "]");
     }
-
-    std::cout << "Loading model: " << _path << std::endl; // Debug output
 
     while (!file.eof())
     {
@@ -137,8 +137,6 @@ inline Model::Model(const std::string& _path)
             }
         }
     }
-
-    std::cout << "Model loaded with " << m_faces.size() << " faces." << std::endl; // Debug output
 }
 
 inline Model::~Model()
@@ -330,6 +328,16 @@ inline Model::Vertex::Vertex()
     , texcoord(0, 0)
     , normal(0, 0, 0)
 {
+}
+
+
+inline void Model::draw(Shader& shader) const
+{
+    shader.use();
+    // Set uniforms if Model knows them (e.g., model matrix, etc.)
+    glBindVertexArray(m_vaoid);
+    glDrawArrays(GL_TRIANGLES, 0, vertex_count());
+    glBindVertexArray(0);
 }
 
 #endif

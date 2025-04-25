@@ -1,25 +1,36 @@
 #pragma once
+#include <GL/glew.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <iostream>
+
 #include "Shader.h"
-#include "Model.h"
+#include "Mesh.h"
 #include "Player.h"
 #include "Camera.h"
+#include "Road.h"
 
-struct Enemy;
+#define WINDOW_WIDTH 800
+#define WINDOW_HEIGHT 600
 
-struct World
+class World
 {
-	Shader basic;
+public:
+	World();
+	void update(float dt, const Uint8* keyboardState); 
 
-	std::vector<int> keyboard;
+	void render();
 
-	Model playermodel;
+private:
+	void handleInput(float dt, const Uint8* keyboardState);
 
+	Shader shader;
+	std::unique_ptr<Mesh> mesh;
 	Player player;
 	Camera camera;
+	Road road;
 	
-	//std::vector<Enemy> enemies;
+	// Need to be implemented
+	//Enemy enemy;
 
-	World(const GLchar* VertexSrc, const GLchar* FragmentSrc);
-	void render();
-	void handleInput(float dt);
 };

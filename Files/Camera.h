@@ -1,26 +1,20 @@
 #pragma once
+#include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include "glm/glm.hpp"
-#include "Player.h"
-#include "Shader.h"
 
-struct World;
-
-struct Camera
+class Camera
 {
-	Camera(Player* player, World* world, Shader* shader);
+public:
+	Camera();
 	~Camera();
-	void update();
-	void getPlayerPos();
+	glm::mat4 getViewMatrix() const;
 
-	const glm::vec3 getCameraPosition()	const { return CameraPos; }
-	Player player;
-
-	void camInit(const glm::vec3& position, const Camera& camera);
+	void update(const glm::vec3& target, float dt);
 
 private:
-	glm::vec3 CameraPos;
-	Player* m_player;
-	Shader* m_shader;
-
+	glm::vec3 m_position;
+	glm::vec3 m_target;
+	glm::vec3 m_tilt;
+	float m_distance;
+	float m_smoothSpeed;
 };

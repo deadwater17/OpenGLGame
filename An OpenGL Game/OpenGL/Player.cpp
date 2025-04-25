@@ -42,7 +42,7 @@ void Player::handleInput(const Uint8* keyboardState, float dt)
         m_velocity = glm::normalize(m_velocity) * m_speed;
     }
 
-	std::cout << "Player: " <<m_position.x << " " << m_position.y << " " << m_position.z << std::endl;
+	//std::cout << "Player: " <<m_position.x << " " << m_position.y << " " << m_position.z << std::endl;
 }
 
 void Player::draw(Shader& shader)

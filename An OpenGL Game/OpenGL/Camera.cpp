@@ -15,7 +15,7 @@ Camera::~Camera()
 
 glm::mat4 Camera::getViewMatrix() const
 {
-	return glm::lookAt(m_position, m_target, m_tilt);
+	return glm::lookAt(m_position, m_target, m_tilt); //glm::lookAt(glm::vec3(0, 2, 5), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0)); 
 }
 
 void Camera::update(const glm::vec3& target, float dt)
@@ -27,5 +27,5 @@ void Camera::update(const glm::vec3& target, float dt)
 	// Smooth camera movement
 	m_position = glm::mix(m_position, desiredPosition, m_smoothSpeed *dt);
 
-	std::cout << "Camera: " << m_position.x << " " << m_position.y << " " << m_position.z << std::endl;
+	//std::cout << "Camera: " << m_position.x << " " << m_position.y << " " << m_position.z << std::endl;
 }

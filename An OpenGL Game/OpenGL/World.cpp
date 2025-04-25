@@ -16,7 +16,7 @@ World::World()
 	: shader()
     , mesh(std::make_unique<Mesh>(positions, sizeof(positions), colors, sizeof(colors)))
     , player("curuthers.obj","Whiskers_diffuse.png")
-	, road("ground.obj","ground_Diffuse.png")
+	, road("flat_plane.obj","ground_Diffuse.png")
     //enemy()
     //camera(&player)
 {}
@@ -56,11 +56,11 @@ void World::render()
     glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
 
     mesh->draw(shader);
-	std::cout << "Mesh Drawn" << std::endl;
+	//std::cout << "Mesh Drawn" << std::endl;
 
 	player.draw(shader);
-	std::cout << "Player Drawn" << std::endl;
+	//std::cout << "Player Drawn" << std::endl;
 
 	road.draw(shader);
-	std::cout << "Road Drawn" << std::endl;
+	//std::cout << "Road Drawn" << std::endl;
 }

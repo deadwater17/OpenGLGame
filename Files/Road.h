@@ -21,8 +21,8 @@ public:
 	const glm::vec3& getPosition() const;
 
 private:
-	Model model;
-	Texture texture;
+	std::unique_ptr<Model> model;
+	std::unique_ptr<Texture> texture;
 	glm::vec3 scale;
 	glm::vec3 position;
 	glm::vec3 position2;

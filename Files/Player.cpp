@@ -1,43 +1,67 @@
 #include "Player.h"
-#include "World.h"
 
-Player::Player(World* _world)
-    : m_world(_world)
-    , playerPos(0, 0, -3)
-    , Model("curuthers.obj")
-{ }
+Player::Player(const std::string& modelPath, const std::string& texturePath)
+	: m_model(modelPath)
+	, m_texture(texturePath)
+	, m_position(0.0f, 0.0f, 0.0f)
+	, m_velocity(0.0f)
+{
 
-void Player::update()
-{ 
-    display();
 }
 
-void Player::display()
+Player::~Player()
+{}
+
+void Player::update(float dt)
 {
-    m_world->basic.draw(m_world->playermodel,playerPos, m_world->camera);
-    //std::cout << "Position: (" << playerPos.x << ", " << playerPos.y << ", " << playerPos.z << ")" << std::endl;
+    m_position += m_velocity * dt;
 }
 
-void Player::userInput(const std::vector <int>& keyboard, float dt)
+void Player::handleInput(const Uint8* keyboardState, float dt)
 {
-    if (keyboard[SDL_SCANCODE_W]) 
+    m_velocity = glm::vec3(0.0f);
+    if (keyboardState[SDL_SCANCODE_W])
     {
-        playerPos.z -= m_speed; // Move forward
-        //std::cout << "Position: (" << playerPos.x << ", " << playerPos.y << ", " << playerPos.z << ")" << std::endl;
+        m_velocity.z -= 1.0f;
     }
-    if (keyboard[SDL_SCANCODE_S]) 
+    if (keyboardState[SDL_SCANCODE_S]) 
     {
-        playerPos.z += m_speed; // Move backward
-        //std::cout << "Position: (" << playerPos.x << ", " << playerPos.y << ", " << playerPos.z << ")" << std::endl;
+        m_velocity.z += 1.0f;
     }
-    if (keyboard[SDL_SCANCODE_A]) 
+    if (keyboardState[SDL_SCANCODE_A])
     {
-        playerPos.x -= m_speed; // Move left
-        //std::cout << "Position: (" << playerPos.x << ", " << playerPos.y << ", " << playerPos.z << ")" << std::endl;
+        m_velocity.x -= 1.0f;
     }
-    if (keyboard[SDL_SCANCODE_D]) 
+    if (keyboardState[SDL_SCANCODE_D])
     {
-        playerPos.x += m_speed; // Move right
-        //std::cout << "Position: (" << playerPos.x << ", " << playerPos.y << ", " << playerPos.z << ")" << std::endl;
+        m_velocity.x += 1.0f;
     }
+
+    if (glm::length(m_velocity) > 0.0f)
+    {
+        m_velocity = glm::normalize(m_velocity) * m_speed;
+    }
+
+	std::cout << "Player: " <<m_position.x << " " << m_position.y << " " << m_position.z << std::endl;
+}
+
+void Player::draw(Shader& shader)
+{
+    shader.use();
+
+    // Set model matrix uniform
+    glm::mat4 modelMat = glm::translate(glm::mat4(1.0f), m_position);
+    GLint modelLoc = glGetUniformLocation(shader.getID(), "u_Model");
+    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelMat));
+
+    // Bind texture
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, m_texture.getID());
+
+    // Draw model
+    glBindVertexArray(m_model.vao_id());
+    glDrawArrays(GL_TRIANGLES, 0, m_model.vertex_count());
+    glBindVertexArray(0);
+
+	//std::cout << "Player is drawn" << std::endl;
 }

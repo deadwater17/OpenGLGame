@@ -1,21 +1,30 @@
-#pragma once  
-#include <glm/gtc/matrix_transform.hpp>  
-#include <SDL2/SDL.h>  
+#pragma once
 #include "Model.h"
+#include "Texture.h"
+#include "Shader.h"
 
-struct World;  
 
-struct Player : public Model
-{  
-	Player(World* _world);  
-    void update();  
-    void display();  
-	void userInput(const std::vector <int>& keyboard, float dt);
+#include <glm/gtc/type_ptr.hpp>
+#include <SDL2/SDL.h>
 
-	World* m_world; 	
+class Player
+{
+public:
+	Player(const std::string& modelPath, const std::string& texturePath);
+	~Player();
 
-	glm::vec3 playerPos;
-private:  
-	bool m_damaged = false;
-	float m_speed = 0.1f;
+	void handleInput(const Uint8* keybaordState, float dt);
+	void update(float dt);
+	void draw(Shader& shader);
+
+	glm::vec3 getPosition() const { return m_position; }
+
+	float getSpeed() const { return m_speed; }
+
+private:
+	Model m_model;
+	Texture m_texture;
+	glm::vec3 m_position;
+	glm::vec3 m_velocity;
+	float m_speed = 5.0f;
 };

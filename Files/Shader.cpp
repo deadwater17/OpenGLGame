@@ -1,78 +1,115 @@
 #include "Shader.h"
 
+const GLchar* vertexShaderSrc =
+"attribute vec3 a_Position;             " \
+"attribute vec2 a_TexCoord;             " \
+"attribute vec3 a_Normal;               " \
+"uniform mat4 u_Projection;             " \
+"uniform mat4 u_Model;                  " \
+"uniform mat4 u_View;                   " \
+"                                       " \
+"varying vec3 v_FragPos;                " \
+"varying vec3 v_Normal;                 " \
+"varying vec2 v_TexCoord;               " \
+"void main()                            " \
+"{                                      " \
+"gl_Position = u_Projection * u_View * u_Model * vec4(a_Position, 1.0); " \
+"v_TexCoord = a_TexCoord;               " \
+"                                       " \
+"v_Normal = mat3(u_Model) * a_Normal;   " \
+"v_FragPos = vec3(u_Model * vec4(a_Position, 1.0));" \
+"}                                      ";
+
+const GLchar* fragmentShaderSrc =
+"uniform sampler2D u_Texture;       " \
+"varying vec2 v_TexCoord;           " \
+"uniform vec3 u_ViewPos;            " \
+"uniform mat4 u_View;               " \
+"                                   " \
+"vec3 lightPos = vec3(10,10,10);    " \
+"vec3 diffuseColor = vec3(1,1,1);   " \
+"vec3 specularColor = vec3 (1,1,1); " \
+"                                   " \
+"varying vec3 v_Normal;             " \
+"varying vec3 v_FragPos;            " \
+"								    " \
+"void main()                        " \
+"{                                  " \
+"vec3 N = normalize(v_Normal);      " \
+"vec3 lightDir = normalize(lightPos - v_FragPos);   " \
+"float diff = max(dot(N, lightDir), 0.0);           " \
+"vec3 diffuse = diffuseColor * diff;                " \
+"                                                   " \
+"vec3 viewDir = normalize(u_ViewPos - v_FragPos);    " \
+"vec3 reflectDir = reflect(-lightDir,N);         " \
+"float spec = pow (max(dot(viewDir, reflectDir), 0.0),32);" \
+"vec3 specular = spec * specularColor;              " \
+"                                                   " \
+"vec4 viewPos = inverse(u_View) * vec4 (0,0,0,1);" \
+""\
+"vec4 tex = texture2D (u_Texture, v_TexCoord);      " \
+"vec3 lighting = diffuse + specular;                " \
+"gl_FragColor = vec4(lighting,1)* tex;              " \
+"}                                                  ";
 
 
-Shader::Shader(const char* vertexSrc, const char* fragmentSrc)
+Shader::Shader()
+	: programId(0)
+    , vertexShaderId(0)
+    , fragmentShaderId(0)
 {
-	programId = glCreateProgram();
-	vertexShaderId = compileShader(vertexSrc, GL_VERTEX_SHADER);
-	fragmentShaderId = compileShader(fragmentSrc, GL_FRAGMENT_SHADER);
+    // Creating new vertex shader, attaching source code, compiling it and checking for errors
+    GLuint vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(vertexShaderId, 1, &vertexShaderSrc, NULL);
+    glCompileShader(vertexShaderId);
 
-	glAttachShader(programId, vertexShaderId);
+	// Check if any error occur during vertex shader compilation
+    GLint success = 0;
+    glGetShaderiv(vertexShaderId, GL_COMPILE_STATUS, &success);
+    if (!success)
+    {
+        throw std::exception();
+    }
+
+    GLuint fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(fragmentShaderId, 1, &fragmentShaderSrc, NULL);
+    glCompileShader(fragmentShaderId);
+
+    GLint isCompiled = 0;
+    glGetShaderiv(fragmentShaderId, GL_COMPILE_STATUS, &isCompiled);
+    if (isCompiled == GL_FALSE)
+    {
+
+        GLint maxLength = 0;
+        glGetShaderiv(fragmentShaderId, GL_INFO_LOG_LENGTH, &maxLength);
+        // get shader error length
+        std::vector <GLchar> errorLog(maxLength);
+        // basically gets the length of the error message and put it into text
+        glGetShaderInfoLog(fragmentShaderId, maxLength, &maxLength, &errorLog[0]);
+
+        std::cout << &errorLog[0] << std::endl;
+        throw std::exception();
+    }
+
+    programId = glCreateProgram();
+    glAttachShader(programId, vertexShaderId);
 	glAttachShader(programId, fragmentShaderId);
-	glBindAttribLocation(programId, 0, "a_Position");
-	glBindAttribLocation(programId, 1, "a_TexCoord");
-	glBindAttribLocation(programId, 2, "a_Normal");
 	glLinkProgram(programId);
 
-	GLint success = 0;
-
-	glGetProgramiv(programId, GL_LINK_STATUS, &success);
-
-	//checks success
-	if (!success)
-	{
-		GLint logLength = 0;
-		glGetProgramiv(programId, GL_INFO_LOG_LENGTH, &logLength);
-		std::vector<char> log(logLength);
-		glGetProgramInfoLog(programId, logLength, &logLength, log.data());
-		std::cerr << "Program linking failed: " << log.data() << std::endl;
-		throw std::runtime_error("Program linking failed");
-	}
+    glGetProgramiv(programId, GL_LINK_STATUS, &success);
+    //checks success
+    if (!success)
+    {
+        throw std::exception();
+    }
+        
 }
 
 Shader::~Shader()
 {
-	glDetachShader(programId, vertexShaderId);
-	glDeleteShader(vertexShaderId);
-	glDetachShader(programId, fragmentShaderId);
-	glDeleteShader(fragmentShaderId);
-}
-
-GLuint Shader::compileShader(const char* src, GLenum type) {
-	GLuint shaderId = glCreateShader(type);
-	glShaderSource(shaderId, 1, &src, NULL);
-	glCompileShader(shaderId);
-
-	GLint success = 0;
-	glGetShaderiv(shaderId, GL_COMPILE_STATUS, &success);
-	if (!success) {
-		GLint logLength = 0;
-		glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &logLength);
-		std::vector<char> log(logLength);
-		glGetShaderInfoLog(shaderId, logLength, &logLength, log.data());
-		std::cerr << "Shader compilation failed: " << log.data() << std::endl;
-		throw std::runtime_error("Shader compilation failed");
-	}
-
-	return shaderId;
-}
-
-void Shader::draw(const Model& model, const glm::vec3& position, const Camera& camera)
-{
-	// Use the shader program for rendering the model
-	glUseProgram(getID());
-
-	// Set up the model transformation matrix
-	glm::mat4 modelMatrix = glm::mat4(1.0f);
-	modelMatrix = glm::translate(modelMatrix, position);
-
-	// Set the uniform variables for the shader
-	// Model
-	GLint modelLoc = glGetUniformLocation(getID(), "u_Model");
-	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelMatrix));
-
-	// Bind the model's VAO and draw it
-	glBindVertexArray(const_cast<Model&>(model).vao_id());
-	glDrawArrays(GL_TRIANGLES, 0, model.vertex_count());
+    glDetachShader(programId, vertexShaderId);
+    glDetachShader(programId, fragmentShaderId);
+    glDeleteShader(vertexShaderId);
+    glDeleteShader(fragmentShaderId);
+    glDeleteProgram(programId);
 }
