@@ -1,9 +1,8 @@
 #include "Road.h"
 
 Road::Road(const std::string& modelPath, const std::string& texturePath)
-    : position(0.0f,-10.0f,0.0f)
-	, position2(0.0f, 10.0f, 0.0f)
-	, scale(0.01, 1.0f, 0.01f)
+    : position(0.0f,-15.0f,0.0f)
+	, scale(0.01f, 1.0f, 0.01f)
     , model(modelPath)
 	, texture(texturePath)
 {
@@ -15,21 +14,12 @@ Road::~Road()
 
 void Road::update(float dt, float playerSpeed)
 {
-    position.z -= playerSpeed * dt;
-    position2.z -= playerSpeed * dt;
-
-    // Reset if either has moved past the camera
-    // Reset the position after it moves move the unit
-    if (position.z < -30.0f)
-        position.z = position2.z + 30.0f;
-
-    if (position2.z < -30.0f)
-        position2.z = position.z + 30.0f;
+    // unneeded now, moved to world.cpp    
 }
 
 void Road::draw(Shader& shader)
 {
-    shader.use();
+    shader.use();   // might not be neeeded
 
     // Build the model matrix
     glm::mat4 modelMat = glm::mat4(1.0f);

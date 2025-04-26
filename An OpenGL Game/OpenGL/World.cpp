@@ -17,16 +17,25 @@ World::World()
     , mesh(std::make_unique<Mesh>(positions, sizeof(positions), colors, sizeof(colors)))
     , player("curuthers.obj","Whiskers_diffuse.png")
 	, road("ground.obj","ground_Diffuse.png")
+    , camera()
     //enemy()
-    //camera(&player)
-{}
+{
+    // spawns 10 roads ahead first
+    for (int i = 0; i < 10; ++i) {
+        road.setPosition(glm::vec3(0.0f, -10.0f, i * m_tileLength));
+        m_roads.push_back(road);
+    }
+
+
+}
 
 void World::update(float dt, const Uint8* keyboardState)
 {
     handleInput(dt, keyboardState);
 	player.update(dt);
     camera.update(player.getPosition(), dt);
-	road.update(dt, player.getSpeed());
+    handleRoads();
+	//road.update(dt, player.getSpeed());
     //enemy.update(dt);
 
 }
@@ -34,6 +43,18 @@ void World::update(float dt, const Uint8* keyboardState)
 void World::handleInput(float dt, const Uint8* keyboardState)
 {   
 	player.handleInput(keyboardState, dt);
+}
+
+void World::handleRoads()
+{
+	glm::vec3 playerPos = player.getPosition();
+
+    for (auto& road : m_roads) {
+        if (road.getPosition().z + m_tileLength < playerPos.z)
+        {
+            road.setPosition(road.getPosition() + glm::vec3(0.0f, -15.0f, m_tileLength * m_roads.size()));
+        }
+    }
 }
 
 
@@ -61,6 +82,9 @@ void World::render()
 	player.draw(shader);
 	//std::cout << "Player Drawn" << std::endl;
 
-	road.draw(shader);
+    for(auto& road : m_roads)
+	{
+		road.draw(shader);
+	}
 	//std::cout << "Road Drawn" << std::endl;
 }

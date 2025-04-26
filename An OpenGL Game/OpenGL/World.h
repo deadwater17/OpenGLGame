@@ -23,6 +23,8 @@ public:
 
 private:
 	void handleInput(float dt, const Uint8* keyboardState);
+	void handleRoads();
+
 
 	Shader shader;
 	std::unique_ptr<Mesh> mesh;
@@ -30,6 +32,9 @@ private:
 	Camera camera;
 	Road road;
 	
+
+	std::vector<Road> m_roads;
+	const float m_tileLength = 50.0f;
 	// Need to be implemented
 	//Enemy enemy;
 
