@@ -25,7 +25,8 @@ void Camera::update(const glm::vec3& target, float dt)
 	glm::vec3 desiredPosition = target - glm::vec3(0.0f, -2.5f, m_distance); 
 
 	// Smooth camera movement
-	m_position = glm::mix(m_position, desiredPosition, m_smoothSpeed *dt);
+	m_position = desiredPosition;
+	//m_position = glm::mix(m_position, desiredPosition, m_smoothSpeed *dt);
 
 	//std::cout << "Camera: " << m_position.x << " " << m_position.y << " " << m_position.z << std::endl;
 }

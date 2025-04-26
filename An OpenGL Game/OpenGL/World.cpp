@@ -16,7 +16,7 @@ World::World()
 	: shader()
     , mesh(std::make_unique<Mesh>(positions, sizeof(positions), colors, sizeof(colors)))
     , player("curuthers.obj","Whiskers_diffuse.png")
-	, road("flat_plane.obj","ground_Diffuse.png")
+	, road("ground.obj","ground_Diffuse.png")
     //enemy()
     //camera(&player)
 {}

@@ -3,7 +3,7 @@
 Road::Road(const std::string& modelPath, const std::string& texturePath)
     : position(0.0f,-10.0f,0.0f)
 	, position2(0.0f, 10.0f, 0.0f)
-	, scale(1.0f, 1.0f, 1.0f)
+	, scale(0.01, 1.0f, 0.01f)
     , model(modelPath)
 	, texture(texturePath)
 {
@@ -19,31 +19,28 @@ void Road::update(float dt, float playerSpeed)
     position2.z -= playerSpeed * dt;
 
     // Reset if either has moved past the camera
-    if (position.z < -100.0f)
-        position.z = position2.z + 100.0f;
+    // Reset the position after it moves move the unit
+    if (position.z < -30.0f)
+        position.z = position2.z + 30.0f;
 
-    if (position2.z < -100.0f)
-        position2.z = position.z + 100.0f;
+    if (position2.z < -30.0f)
+        position2.z = position.z + 30.0f;
 }
 
 void Road::draw(Shader& shader)
 {
     shader.use();
 
-    // Build the model matrix:
+    // Build the model matrix
     glm::mat4 modelMat = glm::mat4(1.0f);
 
-    // 1) Translate into world:
+    // translate into world
     modelMat = glm::translate(modelMat, position);
 
-    // 2) Rotate 90‹ around X (so it lies flat):
-    modelMat = glm::rotate(
-        modelMat,
-        glm::radians(90.0f),
-        glm::vec3(1.0f, 0.0f, 0.0f)
-    );
+    // Rotate 90‹ around X (so it lies flat):
+    //modelMat = glm::rotate(modelMat, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
-    // 3) Scale if you need:
+    // Scales the road
     modelMat = glm::scale(modelMat, scale);
 
     GLint modelLoc = glGetUniformLocation(shader.getID(), "u_Model");
@@ -58,7 +55,7 @@ void Road::draw(Shader& shader)
     glDrawArrays(GL_TRIANGLES, 0, model.vertex_count());
     glBindVertexArray(0);
 
-	std::cout << "Road: " << position.x << " " << position.y << " " << position.z << std::endl;
+	//std::cout << "Road: " << position.x << " " << position.y << " " << position.z << std::endl;
 }
 
 void Road::setScale(const glm::vec3& scl)

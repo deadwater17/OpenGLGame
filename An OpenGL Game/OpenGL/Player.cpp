@@ -28,13 +28,31 @@ void Player::handleInput(const Uint8* keyboardState, float dt)
     {
         m_velocity.z += 1.0f;
     }
-    if (keyboardState[SDL_SCANCODE_A])
-    {
-        m_velocity.x -= 1.0f;
+
+
+    static bool aPressed = false;
+    static bool dPressed = false;
+
+    if (keyboardState[SDL_SCANCODE_A]) {
+        if (!aPressed && currentLane > minLane) {
+            currentLane--;
+            m_position.x = currentLane * 15.0f;
+        }
+        aPressed = true;
     }
-    if (keyboardState[SDL_SCANCODE_D])
-    {
-        m_velocity.x += 1.0f;
+    else {
+        aPressed = false;
+    }
+
+    if (keyboardState[SDL_SCANCODE_D]) {
+        if (!dPressed && currentLane < maxLane) {
+            currentLane++;
+            m_position.x = currentLane * 15.0f;
+        }
+        dPressed = true;
+    }
+    else {
+        dPressed = false;
     }
 
     if (glm::length(m_velocity) > 0.0f)

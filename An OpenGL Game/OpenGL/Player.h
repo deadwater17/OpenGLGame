@@ -27,4 +27,9 @@ private:
 	glm::vec3 m_position;
 	glm::vec3 m_velocity;
 	float m_speed = 5.0f;
+
+	int currentLane = 0;
+	int minLane = -1;
+	int maxLane = 1;
+
 };

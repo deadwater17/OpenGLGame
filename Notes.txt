@@ -28,6 +28,10 @@ Motion blur, depth-of-field
 Deferred rendering
 
 Issues:
-Added the ground. It doesn't look perfect, so i want to change up the lighting
+ChatGPT - Add more road pieces as the player moves forward; Implement procedural generation or recycling of road tiles
+
+Lets now work on the Enemies (Barriers)
+
+It doesn't look perfect, so i want to change up the lighting
 and then lets start working on the enemies
 and then lets start working on the UI
