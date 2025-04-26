@@ -28,10 +28,9 @@ Motion blur, depth-of-field
 Deferred rendering
 
 Issues:
-ChatGPT - Add more road pieces as the player moves forward; Implement procedural generation or recycling of road tiles
-
-Lets now work on the Enemies (Barriers)
-
+A and D is inverted, need to change
+Height isn't perfect
+Lighting geos black as soon as the obj reaches a certain distance
 It doesn't look perfect, so i want to change up the lighting
 and then lets start working on the enemies
 and then lets start working on the UI

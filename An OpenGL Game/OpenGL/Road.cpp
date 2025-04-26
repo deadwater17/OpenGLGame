@@ -1,7 +1,7 @@
 #include "Road.h"
 
 Road::Road(const std::string& modelPath, const std::string& texturePath)
-    : position(0.0f,-15.0f,0.0f)
+    : position(0.0f,-2.8f,0.0f)
 	, scale(0.01f, 1.0f, 0.01f)
     , model(modelPath)
 	, texture(texturePath)

@@ -29,6 +29,7 @@ private:
 	float m_speed = 5.0f;
 
 	int currentLane = 0;
+	int m_laneSpace = 20;
 	int minLane = -1;
 	int maxLane = 1;
 

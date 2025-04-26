@@ -9,6 +9,7 @@
 #include "Player.h"
 #include "Camera.h"
 #include "Road.h"
+#include "Barrier.h"
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
@@ -23,18 +24,24 @@ public:
 
 private:
 	void handleInput(float dt, const Uint8* keyboardState);
-	void handleRoads();
-
+	void updateRoads();
+	void updateBarrier(float dt);
 
 	Shader shader;
 	std::unique_ptr<Mesh> mesh;
 	Player player;
 	Camera camera;
 	Road road;
+	Barrier barrier;
 	
-
 	std::vector<Road> m_roads;
 	const float m_tileLength = 50.0f;
+
+	std::vector<Barrier> m_barriers;
+	int m_laneSpace = 20;	
+	float m_spawnTimer = 0.0f;
+	float m_spawnInterval = 2.0f;
+
 	// Need to be implemented
 	//Enemy enemy;
 

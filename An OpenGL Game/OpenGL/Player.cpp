@@ -19,16 +19,7 @@ void Player::update(float dt)
 
 void Player::handleInput(const Uint8* keyboardState, float dt)
 {
-    m_velocity = glm::vec3(0.0f);
-    if (keyboardState[SDL_SCANCODE_W])
-    {
-        m_velocity.z -= 1.0f;
-    }
-    if (keyboardState[SDL_SCANCODE_S]) 
-    {
-        m_velocity.z += 1.0f;
-    }
-
+    m_velocity.z += 1.0f;
 
     static bool aPressed = false;
     static bool dPressed = false;
@@ -36,7 +27,7 @@ void Player::handleInput(const Uint8* keyboardState, float dt)
     if (keyboardState[SDL_SCANCODE_A]) {
         if (!aPressed && currentLane > minLane) {
             currentLane--;
-            m_position.x = currentLane * 15.0f;
+            m_position.x = currentLane * m_laneSpace;
         }
         aPressed = true;
     }
@@ -47,7 +38,7 @@ void Player::handleInput(const Uint8* keyboardState, float dt)
     if (keyboardState[SDL_SCANCODE_D]) {
         if (!dPressed && currentLane < maxLane) {
             currentLane++;
-            m_position.x = currentLane * 15.0f;
+            m_position.x = currentLane * m_laneSpace;
         }
         dPressed = true;
     }
