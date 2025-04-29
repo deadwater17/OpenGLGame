@@ -27,7 +27,7 @@ void Player::handleInput(const Uint8* keyboardState, float dt)
     if (keyboardState[SDL_SCANCODE_A]) {
         if (!aPressed && currentLane > minLane) {
             currentLane--;
-            m_position.x = currentLane * m_laneSpace;
+            m_position.x = -currentLane * m_laneSpace;
         }
         aPressed = true;
     }
@@ -38,7 +38,7 @@ void Player::handleInput(const Uint8* keyboardState, float dt)
     if (keyboardState[SDL_SCANCODE_D]) {
         if (!dPressed && currentLane < maxLane) {
             currentLane++;
-            m_position.x = currentLane * m_laneSpace;
+            m_position.x = -currentLane * m_laneSpace;
         }
         dPressed = true;
     }

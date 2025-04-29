@@ -27,9 +27,6 @@ void Road::draw(Shader& shader)
     // translate into world
     modelMat = glm::translate(modelMat, position);
 
-    // Rotate 90Åã around X (so it lies flat):
-    //modelMat = glm::rotate(modelMat, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-
     // Scales the road
     modelMat = glm::scale(modelMat, scale);
 

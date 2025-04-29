@@ -35,12 +35,12 @@ private:
 	Barrier barrier;
 	
 	std::vector<Road> m_roads;
-	const float m_tileLength = 50.0f;
+	const float m_tileLength = 77.0f;
 
 	std::vector<Barrier> m_barriers;
 	int m_laneSpace = 20;	
 	float m_spawnTimer = 0.0f;
-	float m_spawnInterval = 2.0f;
+	float m_spawnInterval = 5.0f;
 
 	// Need to be implemented
 	//Enemy enemy;

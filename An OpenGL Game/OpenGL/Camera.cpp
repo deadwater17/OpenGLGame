@@ -3,9 +3,9 @@
 #include <iostream>
 
 Camera::Camera()
-	: m_position(0.0f, 0.0f, -3.0f)
+	: m_position(0.0f, 3.0f, -3.0f)
 	, m_target(0.0f)
-	, m_tilt(0.0f, 3.0f, 0.0f)
+	, m_tilt(0.0f, 5.0f, 0.0f)
 	, m_distance(5.0f)
 	, m_smoothSpeed(5.0f)
 {}
@@ -22,7 +22,7 @@ void Camera::update(const glm::vec3& target, float dt)
 {
 	m_target = target;
 
-	glm::vec3 desiredPosition = target - glm::vec3(0.0f, -2.5f, m_distance); 
+	glm::vec3 desiredPosition = target - glm::vec3(0.0f, -5.0f, m_distance); 
 
 	// Camera pos
 	m_position = desiredPosition;

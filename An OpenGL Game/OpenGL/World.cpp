@@ -15,14 +15,14 @@ const GLfloat colors[] = {
 World::World()
 	: shader()
     , mesh(std::make_unique<Mesh>(positions, sizeof(positions), colors, sizeof(colors)))
-    , player("models/curuthers.obj","Whiskers_diffuse.png")
+    , player("curuthers.obj","Whiskers_diffuse.png")
 	, road("ground.obj","ground_Diffuse.png")
 	, barrier("barrier.obj", "barrier_Diffuse.png")
     , camera()
 {
 	glm::vec3 roadPos = road.getPosition();
-    // spawns 10 roads ahead first
-    for (int i = 0; i < 10; ++i) {
+    // spawns 4 roads ahead first
+    for (int i = 0; i < 4; ++i) {
         road.setPosition(glm::vec3(0.0f, roadPos.y, i * m_tileLength));
         m_roads.push_back(road);
     }
@@ -66,8 +66,8 @@ void World::updateBarrier(float dt)
 {
 	glm::vec3 barrierPos = barrier.getPosition();
 
-    std::cout << "Updating barriers..." << std::endl;
-    std::cout << "Current barrier count: " << m_barriers.size() << std::endl;
+    //std::cout << "Updating barriers..." << std::endl;
+    //std::cout << "Current barrier count: " << m_barriers.size() << std::endl;
 
     // Iterate through barriers and update them
     for (size_t i = 0; i < m_barriers.size(); ++i) {
@@ -87,6 +87,8 @@ void World::updateBarrier(float dt)
     if (m_spawnTimer >= m_spawnInterval)
     {
         m_spawnTimer = 0.0f;
+
+        m_spawnInterval = (rand() % 5)+1;
 
         // Randomly choose a lane: -1 (left), 0 (middle), 1 (right)
         int lane = (rand() % 3) - 1;
