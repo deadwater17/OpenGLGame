@@ -35,7 +35,7 @@ private:
 	Barrier barrier;
 	
 	std::vector<Road> m_roads;
-	const float m_tileLength = 77.0f;
+	const float m_tileLength = 78.5f;
 
 	std::vector<Barrier> m_barriers;
 	int m_laneSpace = 20;	

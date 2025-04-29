@@ -27,9 +27,14 @@ Image-based lighting, HDR lighting
 Motion blur, depth-of-field
 Deferred rendering
 
+Just done:
+changed the tilt of the camera and the height of it, now it's 3rd person and can see when barrier past the object
+
 Issues:
-A and D is inverted, need to change
-Height isn't perfect
+Start working on UI
+
+Make the window resizable
+Model Height isn't perfect
 Lighting geos black as soon as the obj reaches a certain distance
 It doesn't look perfect, so i want to change up the lighting
 and then lets start working on the enemies

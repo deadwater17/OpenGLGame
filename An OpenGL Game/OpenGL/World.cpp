@@ -15,9 +15,9 @@ const GLfloat colors[] = {
 World::World()
 	: shader()
     , mesh(std::make_unique<Mesh>(positions, sizeof(positions), colors, sizeof(colors)))
-    , player("curuthers.obj","Whiskers_diffuse.png")
-	, road("ground.obj","ground_Diffuse.png")
-	, barrier("barrier.obj", "barrier_Diffuse.png")
+    , player("models/curuthers.obj","models/Whiskers_diffuse.png")
+	, road("models/ground.obj","models/ground_Diffuse.png")
+	, barrier("models/barrier.obj", "models/barrier_Diffuse.png")
     , camera()
 {
 	glm::vec3 roadPos = road.getPosition();
@@ -94,7 +94,7 @@ void World::updateBarrier(float dt)
         int lane = (rand() % 3) - 1;
         float laneOffset = lane * m_laneSpace;
 
-        Barrier newBarrier("barrier.obj", "barrier_Diffuse.png");
+        Barrier newBarrier("models/barrier.obj", "models/barrier_Diffuse.png");
         newBarrier.setPosition(glm::vec3(laneOffset, barrierPos.y, player.getPosition().z + 100.0f));
 
         try {
