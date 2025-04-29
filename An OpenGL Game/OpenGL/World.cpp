@@ -15,11 +15,10 @@ const GLfloat colors[] = {
 World::World()
 	: shader()
     , mesh(std::make_unique<Mesh>(positions, sizeof(positions), colors, sizeof(colors)))
-    , player("curuthers.obj","Whiskers_diffuse.png")
+    , player("models/curuthers.obj","Whiskers_diffuse.png")
 	, road("ground.obj","ground_Diffuse.png")
 	, barrier("barrier.obj", "barrier_Diffuse.png")
     , camera()
-    //enemy()
 {
 	glm::vec3 roadPos = road.getPosition();
     // spawns 10 roads ahead first
