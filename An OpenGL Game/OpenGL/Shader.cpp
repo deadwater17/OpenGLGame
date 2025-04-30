@@ -105,6 +105,46 @@ Shader::Shader()
         
 }
 
+void Shader::compile(const GLchar* vertexSrc, const GLchar* fragmentSrc)
+{
+    vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(vertexShaderId, 1, &vertexSrc, NULL);
+    glCompileShader(vertexShaderId);
+
+    GLint success = 0;
+    glGetShaderiv(vertexShaderId, GL_COMPILE_STATUS, &success);
+    if (!success)
+    {
+        throw std::runtime_error("Failed to compile vertex shader.");
+    }
+
+    fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(fragmentShaderId, 1, &fragmentSrc, NULL);
+    glCompileShader(fragmentShaderId);
+
+    glGetShaderiv(fragmentShaderId, GL_COMPILE_STATUS, &success);
+    if (!success)
+    {
+        GLint maxLength = 0;
+        glGetShaderiv(fragmentShaderId, GL_INFO_LOG_LENGTH, &maxLength);
+        std::vector<GLchar> errorLog(maxLength);
+        glGetShaderInfoLog(fragmentShaderId, maxLength, &maxLength, &errorLog[0]);
+        std::cerr << &errorLog[0] << std::endl;
+        throw std::runtime_error("Failed to compile fragment shader.");
+    }
+
+    programId = glCreateProgram();
+    glAttachShader(programId, vertexShaderId);
+    glAttachShader(programId, fragmentShaderId);
+    glLinkProgram(programId);
+
+    glGetProgramiv(programId, GL_LINK_STATUS, &success);
+    if (!success)
+    {
+        throw std::runtime_error("Failed to link shader program.");
+    }
+}
+
 Shader::~Shader()
 {
     glDetachShader(programId, vertexShaderId);

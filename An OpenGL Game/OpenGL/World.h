@@ -10,6 +10,7 @@
 #include "Camera.h"
 #include "Road.h"
 #include "Barrier.h"
+#include "GUI.h"
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
@@ -28,11 +29,14 @@ private:
 	void updateBarrier(float dt);
 
 	Shader shader;
+	Shader guiShader;
+
 	std::unique_ptr<Mesh> mesh;
 	Player player;
 	Camera camera;
 	Road road;
 	Barrier barrier;
+	GUI gui;
 	
 	std::vector<Road> m_roads;
 	const float m_tileLength = 78.5f;

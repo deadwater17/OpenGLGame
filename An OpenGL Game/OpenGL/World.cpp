@@ -20,14 +20,14 @@ World::World()
 	, barrier("models/barrier.obj", "models/barrier_Diffuse.png")
     , camera()
 {
+    gui.init();
+
 	glm::vec3 roadPos = road.getPosition();
     // spawns 4 roads ahead first
     for (int i = 0; i < 4; ++i) {
         road.setPosition(glm::vec3(0.0f, roadPos.y, i * m_tileLength));
         m_roads.push_back(road);
     }
-
-
 }
 
 void World::update(float dt, const Uint8* keyboardState)
@@ -133,6 +133,8 @@ void World::render()
 	player.draw(shader);
 	//std::cout << "Player Drawn" << std::endl;
 
+    gui.draw(guiShader);
+
     for(auto& road : m_roads)
 	{
 		road.draw(shader);
@@ -143,5 +145,4 @@ void World::render()
     {
         barrier.draw(shader);
     }
-
 }

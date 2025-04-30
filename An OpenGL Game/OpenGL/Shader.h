@@ -12,6 +12,8 @@ public:
 	void use() const { glUseProgram(programId); };
 	GLuint getID() const { return programId; };
 
+	void compile(const GLchar* vertexSrc, const GLchar* fragmentSrc);
+
 private:
 	GLuint programId;
 	GLuint vertexShaderId;
