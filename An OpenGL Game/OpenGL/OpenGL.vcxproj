@@ -104,12 +104,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>contrib/include;C:\Users\s5609959\OneDrive - Bournemouth University\2nd Year\3DGP\OpenGL\OpenGL\contrib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\s5609959\OpenGLGame\An OpenGL Game\OpenGL\contrib\include;contrib/include;C:\Users\s5609959\OneDrive - Bournemouth University\2nd Year\3DGP\OpenGL\OpenGL\contrib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>contrib/lib;C:\Users\s5609959\OneDrive - Bournemouth University\2nd Year\3DGP\OpenGL\OpenGL\contrib\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\s5609959\OpenGLGame\An OpenGL Game\OpenGL\contrib\lib;contrib/lib;C:\Users\s5609959\OneDrive - Bournemouth University\2nd Year\3DGP\OpenGL\OpenGL\contrib\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;glew32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
