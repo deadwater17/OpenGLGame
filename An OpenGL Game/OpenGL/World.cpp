@@ -12,15 +12,22 @@ const GLfloat colors[] = {
     0.0f, 0.0f, 1.0f, 1.0f,
 };
 
-World::World()
-	: shader()
+World::World(SDL_Window* window, SDL_Renderer* renderer)
+    : window(window)
+    , renderer(renderer)
+    , shader()
     , mesh(std::make_unique<Mesh>(positions, sizeof(positions), colors, sizeof(colors)))
-    , player("models/curuthers.obj","models/Whiskers_diffuse.png")
-	, road("models/ground.obj","models/ground_Diffuse.png")
-	, barrier("models/barrier.obj", "models/barrier_Diffuse.png")
+    , player("models/curuthers.obj", "models/Whiskers_diffuse.png")
+    , road("models/ground.obj", "models/ground_Diffuse.png")
+    , barrier("models/barrier.obj", "models/barrier_Diffuse.png")
     , camera()
+    , score(0)
 {
-    gui.init();
+    font = TTF_OpenFont("font\\ShineTypewriter-lgwzd.ttf", 28);
+    if (font == NULL)
+    {
+        //printf("Failed to load font! SDL_ttf Error: %s\n", TTF_GetError());
+    }
 
 	glm::vec3 roadPos = road.getPosition();
     // spawns 4 roads ahead first
@@ -133,8 +140,6 @@ void World::render()
 	player.draw(shader);
 	//std::cout << "Player Drawn" << std::endl;
 
-    gui.draw(guiShader);
-    std::cout << "GUI drawn" << std::endl;
 
     for(auto& road : m_roads)
 	{
@@ -146,4 +151,30 @@ void World::render()
     {
         barrier.draw(shader);
     }
+
+    SDL_Color textColor = { 0, 0, 0, 0 };
+    std::string scoreText = "Score: " + std::to_string(score);
+    SDL_Texture* scoreTexture = renderText(scoreText, textColor, font, renderer);
+    if (!scoreTexture)
+    {
+        std::cerr << "Failed to create score texture! SDL Error: " << SDL_GetError() << std::endl;
+    }
+    int scoreWidth, scoreHeight;
+    if (SDL_QueryTexture(scoreTexture, NULL, NULL, &scoreWidth, &scoreHeight) != 0) 
+    {
+        std::cerr << "Failed to query score texture! SDL Error: " << SDL_GetError() << std::endl;
+        SDL_DestroyTexture(scoreTexture);
+        return;
+    }
+    SDL_Rect scoreRect = { WINDOW_WIDTH - scoreWidth - 10, 10, scoreWidth, scoreHeight };
+    SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255); // Yellow
+    SDL_RenderFillRect(renderer, &scoreRect);
+    if (SDL_RenderCopy(renderer, scoreTexture, NULL, &scoreRect) != 0) 
+    {
+        std::cerr << "Failed to render score texture! SDL Error: " << SDL_GetError() << std::endl;
+    }
+    SDL_DestroyTexture(scoreTexture);
+
+    SDL_RenderPresent(renderer);
+
 }

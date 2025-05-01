@@ -29,7 +29,18 @@ int main()
         throw std::runtime_error("Failed to initialze GLEW");
     }
 
-    World world;
+    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    if (renderer == NULL)
+    {
+        printf("Renderer could not be created! SDL_Error: %s\n", SDL_GetError());
+    }
+
+    if (TTF_Init() == -1) {
+        std::cerr << "Failed to initialize SDL_ttf: " << TTF_GetError() << std::endl;
+        return -1;
+    }
+
+    World world(window, renderer);
     const Uint8* keyboard = nullptr;
 
 	bool quit = false;
@@ -64,4 +75,8 @@ int main()
 
 		SDL_GL_SwapWindow(window);
 	}
+
+    SDL_RenderClear(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
 }
