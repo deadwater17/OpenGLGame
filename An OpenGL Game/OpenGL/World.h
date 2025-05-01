@@ -10,8 +10,8 @@
 #include "Camera.h"
 #include "Road.h"
 #include "Barrier.h"
-#include "Render_Text_Texture.h"
-#include "Load_Text_Texture.h"
+#include "Score.h"
+#include "UIShader.h"
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
@@ -19,7 +19,7 @@
 class World
 {
 public:
-	World(SDL_Window* window, SDL_Renderer* renderer);
+	World();
 	void update(float dt, const Uint8* keyboardState); 
 
 	void render();
@@ -29,20 +29,16 @@ private:
 	void updateRoads();
 	void updateBarrier(float dt);
 
-	Shader shader;
+	void UpdateScore();
 
-	SDL_Window* window;
-	SDL_Renderer* renderer;
+	Shader shader;
 
 	std::unique_ptr<Mesh> mesh;
 	Player player;
 	Camera camera;
 	Road road;
 	Barrier barrier;
-
-	TTF_Font* font;
-	
-	int score;
+	Score score;
 
 	std::vector<Road> m_roads;
 	const float m_tileLength = 78.5f;

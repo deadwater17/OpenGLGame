@@ -32,6 +32,8 @@ changed the tilt of the camera and the height of it, now it's 3rd person and can
 
 Issues:
 Finish GUI set up (it isnt rendering)
+Might need to create a another shader just for the 2D UI
+Still UI issue
 
 
 Make the window resizable

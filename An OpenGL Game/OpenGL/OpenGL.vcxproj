@@ -144,8 +144,10 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Render_Text_Texture.cpp" />
     <ClCompile Include="Road.cpp" />
+    <ClCompile Include="Score.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="UIShader.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -162,8 +164,10 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="Render_Text_Texture.h" />
     <ClInclude Include="Road.h" />
+    <ClInclude Include="Score.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="UIShader.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

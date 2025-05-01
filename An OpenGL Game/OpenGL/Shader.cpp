@@ -59,6 +59,8 @@ Shader::Shader()
     , vertexShaderId(0)
     , fragmentShaderId(0)
 {
+
+
     // Creating new vertex shader, attaching source code, compiling it and checking for errors
     GLuint vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShaderId, 1, &vertexShaderSrc, NULL);

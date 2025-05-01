@@ -12,22 +12,16 @@ const GLfloat colors[] = {
     0.0f, 0.0f, 1.0f, 1.0f,
 };
 
-World::World(SDL_Window* window, SDL_Renderer* renderer)
-    : window(window)
-    , renderer(renderer)
-    , shader()
+World::World()
+    : shader()
+    , uiShader()
     , mesh(std::make_unique<Mesh>(positions, sizeof(positions), colors, sizeof(colors)))
     , player("models/curuthers.obj", "models/Whiskers_diffuse.png")
     , road("models/ground.obj", "models/ground_Diffuse.png")
     , barrier("models/barrier.obj", "models/barrier_Diffuse.png")
     , camera()
-    , score(0)
 {
-    font = TTF_OpenFont("font\\ShineTypewriter-lgwzd.ttf", 28);
-    if (font == NULL)
-    {
-        //printf("Failed to load font! SDL_ttf Error: %s\n", TTF_GetError());
-    }
+    uiShader.compile(uiVertexShaderSrc, uiFragmentShaderSrc);
 
 	glm::vec3 roadPos = road.getPosition();
     // spawns 4 roads ahead first
@@ -45,9 +39,8 @@ void World::update(float dt, const Uint8* keyboardState)
 
     updateRoads();
     updateBarrier(dt);
-	//road.update(dt, player.getSpeed());
-    //enemy.update(dt);
 
+    score.update(1);
 }
 
 void World::handleInput(float dt, const Uint8* keyboardState)
@@ -140,7 +133,6 @@ void World::render()
 	player.draw(shader);
 	//std::cout << "Player Drawn" << std::endl;
 
-
     for(auto& road : m_roads)
 	{
 		road.draw(shader);
@@ -152,29 +144,15 @@ void World::render()
         barrier.draw(shader);
     }
 
-    SDL_Color textColor = { 0, 0, 0, 0 };
-    std::string scoreText = "Score: " + std::to_string(score);
-    SDL_Texture* scoreTexture = renderText(scoreText, textColor, font, renderer);
-    if (!scoreTexture)
-    {
-        std::cerr << "Failed to create score texture! SDL Error: " << SDL_GetError() << std::endl;
-    }
-    int scoreWidth, scoreHeight;
-    if (SDL_QueryTexture(scoreTexture, NULL, NULL, &scoreWidth, &scoreHeight) != 0) 
-    {
-        std::cerr << "Failed to query score texture! SDL Error: " << SDL_GetError() << std::endl;
-        SDL_DestroyTexture(scoreTexture);
-        return;
-    }
-    SDL_Rect scoreRect = { WINDOW_WIDTH - scoreWidth - 10, 10, scoreWidth, scoreHeight };
-    SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255); // Yellow
-    SDL_RenderFillRect(renderer, &scoreRect);
-    if (SDL_RenderCopy(renderer, scoreTexture, NULL, &scoreRect) != 0) 
-    {
-        std::cerr << "Failed to render score texture! SDL Error: " << SDL_GetError() << std::endl;
-    }
-    SDL_DestroyTexture(scoreTexture);
+    glDisable(GL_DEPTH_TEST); // UI must be drawn on top
 
-    SDL_RenderPresent(renderer);
+    score.draw(uiShader.getID(), WINDOW_WIDTH, WINDOW_HEIGHT);
 
+    glEnable(GL_DEPTH_TEST);
+    //SDL_RenderPresent(renderer);  // causes black spasms
+}
+
+void World::UpdateScore()
+{
+    
 }
