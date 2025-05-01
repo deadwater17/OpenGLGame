@@ -134,6 +134,7 @@ void World::render()
 	//std::cout << "Player Drawn" << std::endl;
 
     gui.draw(guiShader);
+    std::cout << "GUI drawn" << std::endl;
 
     for(auto& road : m_roads)
 	{

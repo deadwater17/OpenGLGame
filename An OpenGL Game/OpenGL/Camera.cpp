@@ -5,7 +5,7 @@
 Camera::Camera()
 	: m_position(0.0f, 3.0f, -3.0f)
 	, m_target(0.0f)
-	, m_tilt(0.0f, 5.0f, 0.0f)
+	, m_tilt(0.0f, 3.0f, 0.0f)
 	, m_distance(5.0f)
 	, m_smoothSpeed(5.0f)
 {}
