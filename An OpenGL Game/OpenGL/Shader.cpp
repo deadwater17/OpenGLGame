@@ -26,7 +26,7 @@ const GLchar* fragmentShaderSrc =
 "uniform vec3 u_ViewPos;            " \
 "uniform mat4 u_View;               " \
 "                                   " \
-"vec3 lightPos = vec3(10,10,10);    " \
+"vec3 lightPos = vec3(10,5,10);    " \
 "vec3 diffuseColor = vec3(1,1,1);   " \
 "vec3 specularColor = vec3 (1,1,1); " \
 "                                   " \
@@ -37,7 +37,7 @@ const GLchar* fragmentShaderSrc =
 "{                                  " \
 "vec3 N = normalize(v_Normal);      " \
 "vec3 lightDir = normalize(lightPos - v_FragPos);   " \
-"float diff = max(dot(N, lightDir), 0.0);           " \
+"float diff = max(dot(N, lightDir), 0.0);           "     
 "vec3 diffuse = diffuseColor * diff;                " \
 "                                                   " \
 "vec3 viewDir = normalize(u_ViewPos - v_FragPos);    " \
@@ -52,6 +52,7 @@ const GLchar* fragmentShaderSrc =
 "gl_FragColor = vec4(lighting,1)* tex;              " \
 "}                                                  ";
 
+// line 40: float diff = max(dot(N, lightDir), 0.0); 
 
 Shader::Shader()
 	: programId(0)

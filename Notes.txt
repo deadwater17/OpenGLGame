@@ -31,7 +31,8 @@ Just done:
 changed the tilt of the camera and the height of it, now it's 3rd person and can see when barrier past the object
 
 Issues:
-Finish GUI set up
+Finish GUI set up (it isnt rendering)
+
 
 Make the window resizable
 Model Height isn't perfect

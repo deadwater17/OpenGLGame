@@ -6,7 +6,7 @@ Barrier::Barrier(const std::string& modelPath, const std::string& texturePath)
     : m_model(modelPath)
     , m_texture(texturePath)
     , m_position(0.0f, -3.0f, 0.0f)
-    , scale(15,15,15)
+    , scale(10,10,10)
 {
 }
 
