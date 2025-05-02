@@ -14,14 +14,13 @@ const GLfloat colors[] = {
 
 World::World()
     : shader()
-    , uiShader()
+	, uiShader()
     , mesh(std::make_unique<Mesh>(positions, sizeof(positions), colors, sizeof(colors)))
     , player("models/curuthers.obj", "models/Whiskers_diffuse.png")
     , road("models/ground.obj", "models/ground_Diffuse.png")
     , barrier("models/barrier.obj", "models/barrier_Diffuse.png")
     , camera()
 {
-    uiShader.compile(uiVertexShaderSrc, uiFragmentShaderSrc);
 
 	glm::vec3 roadPos = road.getPosition();
     // spawns 4 roads ahead first
@@ -144,15 +143,21 @@ void World::render()
         barrier.draw(shader);
     }
 
-    glDisable(GL_DEPTH_TEST); // UI must be drawn on top
+	uiShader.use();
 
-    score.draw(uiShader.getID(), WINDOW_WIDTH, WINDOW_HEIGHT);
+    glm::mat4 orthoProj = glm::ortho(0.0f, (float)WINDOW_WIDTH, (float)WINDOW_HEIGHT, 0.0f);
+    glUniformMatrix4fv(glGetUniformLocation(uiShader.getID(), "u_Projection"), 1, GL_FALSE, glm::value_ptr(orthoProj));
 
-    glEnable(GL_DEPTH_TEST);
+    // View matrix can be identity for 2D
+    glm::mat4 identityView = glm::mat4(1.0f);
+    glUniformMatrix4fv(glGetUniformLocation(uiShader.getID(), "u_View"), 1, GL_FALSE, glm::value_ptr(identityView));
+
+    score.draw(uiShader, WINDOW_WIDTH, WINDOW_HEIGHT);
+
     //SDL_RenderPresent(renderer);  // causes black spasms
 }
 
-void World::UpdateScore()
+void World::takeDMG()
 {
     
 }

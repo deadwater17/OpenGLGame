@@ -31,9 +31,7 @@ Just done:
 changed the tilt of the camera and the height of it, now it's 3rd person and can see when barrier past the object
 
 Issues:
-Finish GUI set up (it isnt rendering)
-Might need to create a another shader just for the 2D UI
-Still UI issue
+UI - just need to create VAO and VBO for the quad vertices
 
 
 Make the window resizable

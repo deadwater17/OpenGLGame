@@ -11,7 +11,7 @@
 #include "Road.h"
 #include "Barrier.h"
 #include "Score.h"
-#include "UIShader.h"
+#include "uiShader.h"
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
@@ -29,9 +29,10 @@ private:
 	void updateRoads();
 	void updateBarrier(float dt);
 
-	void UpdateScore();
+	void takeDMG();
 
 	Shader shader;
+	uiShader uiShader;
 
 	std::unique_ptr<Mesh> mesh;
 	Player player;

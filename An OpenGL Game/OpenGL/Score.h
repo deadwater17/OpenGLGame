@@ -5,7 +5,11 @@
 #include <sstream>
 #include <string>
 
-#include "UIShader.h"
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <iostream>
+
+#include "uiShader.h"
 
 class Score 
 {
@@ -14,14 +18,14 @@ public:
     ~Score();
 
     void update(int amount);
-    void draw(GLuint shaderID, int windowWidth, int windowHeight);
+    void draw(const uiShader* uishader);
 
 private:
     int m_score;
-    GLuint m_vao, m_vbo;
+    int width, height;
+    std::string text;
     GLuint m_texture;
     TTF_Font* m_font;
 
-    void initQuad();
-    void updateTexture(); // Called when score changes
+    void updateTexture(); 
 };

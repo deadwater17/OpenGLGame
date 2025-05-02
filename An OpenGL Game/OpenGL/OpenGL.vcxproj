@@ -147,7 +147,7 @@
     <ClCompile Include="Score.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="UIShader.cpp" />
+    <ClCompile Include="uiShader.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -167,7 +167,7 @@
     <ClInclude Include="Score.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Texture.h" />
-    <ClInclude Include="UIShader.h" />
+    <ClInclude Include="uiShader.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
