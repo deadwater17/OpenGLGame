@@ -16,9 +16,15 @@ World::World()
     : shader()
     , uiShader()
     , mesh(std::make_unique<Mesh>(positions, sizeof(positions), colors, sizeof(colors)))
+<<<<<<< Updated upstream
     , player("models/curuthers.obj", "models/Whiskers_diffuse.png")
     , road("models/ground.obj", "models/ground_Diffuse.png")
     , barrier("models/barrier.obj", "models/barrier_Diffuse.png")
+=======
+    , player("models/curuthers.obj","models/Whiskers_diffuse.png")
+	, road("models/ground.obj","models/ground_Diffuse.png")
+	, barrier("models/barrier.obj", "models/barrier_Diffuse.png")
+>>>>>>> Stashed changes
     , camera()
 {
     uiShader.compile(uiVertexShaderSrc, uiFragmentShaderSrc);

@@ -168,6 +168,8 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="UIShader.h" />
+    <ClInclude Include="uiShader.h" />
+>>>>>>> Stashed changes
     <ClInclude Include="World.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
