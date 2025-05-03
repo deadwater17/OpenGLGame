@@ -147,11 +147,7 @@
     <ClCompile Include="Score.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Texture.cpp" />
-<<<<<<< Updated upstream
-    <ClCompile Include="UIShader.cpp" />
-=======
     <ClCompile Include="uiShader.cpp" />
->>>>>>> Stashed changes
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -171,11 +167,7 @@
     <ClInclude Include="Score.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Texture.h" />
-<<<<<<< Updated upstream
-    <ClInclude Include="UIShader.h" />
-=======
     <ClInclude Include="uiShader.h" />
->>>>>>> Stashed changes
     <ClInclude Include="World.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
