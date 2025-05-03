@@ -18,7 +18,7 @@ public:
 	void draw(Shader& shader);
 	void setScale(const glm::vec3& scl);
 	void setPosition(const glm::vec3& pos);
-	const glm::vec3& getPosition() const;
+	const glm::vec3& getPosition() const{ return position; }
 
 private:
 	Model model;

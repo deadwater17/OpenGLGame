@@ -18,7 +18,7 @@ public:
     ~Score();
 
     void update(int amount);
-    void draw(const uiShader* uishader);
+    void draw(uiShader& uishader);
 
 private:
     int m_score;
@@ -26,6 +26,8 @@ private:
     std::string text;
     GLuint m_texture;
     TTF_Font* m_font;
+    GLuint quadVAO, quadVBO;
 
-    void updateTexture(); 
+    void setupQuad();
+    void updateTexture(const std::string& newText);
 };

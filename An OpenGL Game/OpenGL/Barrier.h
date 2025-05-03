@@ -17,10 +17,15 @@ public:
 	void setPosition(const glm::vec3& pos);
 	const glm::vec3& getPosition() const;
 
+	bool getHasCollided() const { return hasCollidedWithPlayer; }
+	void setHasCollided(bool collided) { hasCollidedWithPlayer = collided; }
 private:
 	Model m_model;
 	Texture m_texture;
 	glm::vec3 scale;
 	glm::vec3 m_position;
+
+	bool hasCollidedWithPlayer = false;
+
 
 };

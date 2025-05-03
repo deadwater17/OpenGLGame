@@ -31,7 +31,9 @@ Just done:
 changed the tilt of the camera and the height of it, now it's 3rd person and can see when barrier past the object
 
 Issues:
-UI - just need to create VAO and VBO for the quad vertices
+
+
+Need to ask Karsten: UI is just not displaying
 
 
 Make the window resizable
@@ -40,3 +42,11 @@ Lighting geos black as soon as the obj reaches a certain distance
 It doesn't look perfect, so i want to change up the lighting
 and then lets start working on the enemies
 and then lets start working on the UI
+
+
+Plan:
+get player health = 3
+If player y pos and the barrier pos is same
+	check if lane is same, if yes
+	health = health - 0
+display health and score

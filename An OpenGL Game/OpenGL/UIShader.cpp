@@ -7,7 +7,7 @@ const GLchar* uivertexShaderSrc =
 "varying vec2 v_TexCoord;               " \
 "                                       " \
 "void main() {                          " \
-"gl_Positions = u_Projection * vec4(a_Position,0.0,1.0);    " \
+"gl_Position = u_Projection * vec4(a_Position,0.0,1.0);    " \
 "v_TexCoord = a_TexCoord;               " \
 "}                                      ";
 
@@ -37,7 +37,12 @@ uiShader::uiShader()
     glGetShaderiv(vertexShaderId, GL_COMPILE_STATUS, &success);
     if (!success)
     {
-        throw std::exception();
+        GLint maxLength = 0;
+        glGetShaderiv(vertexShaderId, GL_INFO_LOG_LENGTH, &maxLength);
+        std::vector<GLchar> errorLog(maxLength);
+        glGetShaderInfoLog(vertexShaderId, maxLength, &maxLength, &errorLog[0]);
+        std::cerr << &errorLog[0] << std::endl;
+        throw std::runtime_error("Failed to compile fragment shader.");
     }
 
     GLuint fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);

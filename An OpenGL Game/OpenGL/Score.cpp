@@ -38,7 +38,7 @@ Score::~Score() {
 
 void Score::update(int amount) {
     m_score += amount;
-    updateTexture();
+    updateTexture("0");
 }
 
 void Score::updateTexture(const std::string& newText) 
@@ -69,15 +69,46 @@ void Score::updateTexture(const std::string& newText)
     SDL_FreeSurface(surface);
 }
 
-void Score::draw(const uiShader* uishader) 
+void Score::setupQuad()
 {
+    // Define vertices for a 1x1 quad (two triangles forming a rectangle)
+    float quadVertices[] = {
+        // positions     // texCoords
+        0.0f, 1.0f,      0.0f, 1.0f,
+        1.0f, 0.0f,      1.0f, 0.0f,
+        0.0f, 0.0f,      0.0f, 0.0f,
 
-    glBindTexture(GL_TEXTURE_2D, textureId);
+        0.0f, 1.0f,      0.0f, 1.0f,
+        1.0f, 1.0f,      1.0f, 1.0f,
+        1.0f, 0.0f,      1.0f, 0.0f
+    };
 
-    glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, 0.0f));
+    // Create and bind VAO/VBO for the quad
+    glGenVertexArrays(1, &quadVAO);
+    glGenBuffers(1, &quadVBO);
+    glBindVertexArray(quadVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), quadVertices, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (GLvoid*)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (GLvoid*)(2 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+}
+
+void Score::draw(uiShader& uishader) 
+{
+    glm::vec3 m_pos = glm::vec3(20.0f, 20.0f, 0.0f);
+
+    glBindTexture(GL_TEXTURE_2D, m_texture);
+
+    glm::mat4 model = glm::translate(glm::mat4(1.0f),m_pos);
     model = glm::scale(model, glm::vec3(width, height, 1.0f));
 
-    glUniformMatrix4fv(glGetUniformLocation(shader.getID(), "u_Model"), 1, GL_FALSE, glm::value_ptr(model));
+    glUniformMatrix4fv(glGetUniformLocation(uishader.getID(), "u_Model"), 1, GL_FALSE, glm::value_ptr(model));
 
     // Bind VAO/VBO for your quad (e.g., two triangles making a rectangle)
     glBindVertexArray(quadVAO);

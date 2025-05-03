@@ -29,8 +29,6 @@ private:
 	void updateRoads();
 	void updateBarrier(float dt);
 
-	void takeDMG();
-
 	Shader shader;
 	uiShader uiShader;
 
@@ -45,9 +43,15 @@ private:
 	const float m_tileLength = 78.5f;
 
 	std::vector<Barrier> m_barriers;
+	int m_currentLane;
 	int m_laneSpace = 20;	
 	float m_spawnTimer = 0.0f;
 	float m_spawnInterval = 5.0f;
+
+	int playerHealth;
+
+	void takeDMG();
+	bool checkCollision(const Player& player, const Barrier& barrier);
 
 	// Need to be implemented
 	//Enemy enemy;

@@ -54,8 +54,3 @@ void Road::setPosition(const glm::vec3& pos)
 {
     position = pos;
 }
-
-const glm::vec3& Road::getPosition() const
-{
-	return position;
-}

@@ -60,10 +60,9 @@ int main()
 		
         world.update(deltaTime, keyboard);
         world.render();
-
-        glEnable(GL_DEPTH_TEST);
-        glDisable(GL_CULL_FACE);
-
+        
+        //glEnable(GL_DEPTH_TEST);
+        //glDisable(GL_CULL_FACE);      // dont know what this does, it didnt cahnge anything
         
 		SDL_GL_SwapWindow(window);
 	}

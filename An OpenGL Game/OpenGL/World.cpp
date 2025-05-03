@@ -21,6 +21,9 @@ World::World()
     , barrier("models/barrier.obj", "models/barrier_Diffuse.png")
     , camera()
 {
+    playerHealth = player.playerHP;
+
+    std::cout << playerHealth << std::endl;
 
 	glm::vec3 roadPos = road.getPosition();
     // spawns 4 roads ahead first
@@ -49,14 +52,23 @@ void World::handleInput(float dt, const Uint8* keyboardState)
 
 void World::updateRoads()
 {
-	glm::vec3 playerPos = player.getPosition();
-	glm::vec3 roadPos = road.getPosition();
+    glm::vec3 playerPos = player.getPosition();
 
-    for (auto& road : m_roads) 
+    // Find the current farthest Z value
+    float maxZ = 0.0f;
+    for (const auto& road : m_roads)
+    {
+        if (road.getPosition().z > maxZ)
+            maxZ = road.getPosition().z;
+    }
+
+    for (auto& road : m_roads)
     {
         if (road.getPosition().z + m_tileLength < playerPos.z)
         {
-            road.setPosition(road.getPosition() + glm::vec3(0.0f, roadPos.y, m_tileLength * m_roads.size()));
+            // Move this road to be just after the farthest one
+            road.setPosition(glm::vec3(0.0f, road.getPosition().y, maxZ + m_tileLength));
+            maxZ = road.getPosition().z; // update maxZ
         }
     }
 }
@@ -68,15 +80,29 @@ void World::updateBarrier(float dt)
     //std::cout << "Updating barriers..." << std::endl;
     //std::cout << "Current barrier count: " << m_barriers.size() << std::endl;
 
-    // Iterate through barriers and update them
-    for (size_t i = 0; i < m_barriers.size(); ++i) {
-        try {
-            // Access barrier using at() to catch out_of_range
+    for (size_t i = 0; i < m_barriers.size(); ++i) 
+    {
+        try 
+        {
             Barrier& b = m_barriers.at(i);
-            std::cout << "Updating barrier " << i << " at position " << b.getPosition().z << std::endl;
             b.update(dt, player.getSpeed());
-        }
-        catch (const std::out_of_range& e) {
+
+            if (checkCollision(player, b)) 
+            {
+                if (!b.getHasCollided()) 
+                {
+                    std::cout << "Collision detected with barrier " << i << " at position " << b.getPosition().z << std::endl;
+                    takeDMG();
+                    b.setHasCollided(true); // Mark as handled
+                }
+            }
+            else
+            {
+                b.setHasCollided(false); // Reset flag when no longer colliding
+            }
+
+        catch (const std::out_of_range& e) 
+        {
             std::cerr << "Caught out_of_range exception while accessing barrier " << i << std::endl;
         }
     }
@@ -97,9 +123,9 @@ void World::updateBarrier(float dt)
         newBarrier.setPosition(glm::vec3(laneOffset, barrierPos.y, player.getPosition().z + 100.0f));
 
         try {
-            std::cout << "Spawning new barrier at position: " << newBarrier.getPosition().z << std::endl;
+            //std::cout << "Spawning new barrier at position: " << newBarrier.getPosition().z << std::endl;
             m_barriers.push_back(newBarrier);
-            std::cout << "New barrier spawned. Total barriers: " << m_barriers.size() << std::endl;
+            //std::cout << "New barrier spawned. Total barriers: " << m_barriers.size() << std::endl;
         }
         catch (const std::exception& e) {
             std::cerr << "Exception caught while adding new barrier: " << e.what() << std::endl;
@@ -110,6 +136,9 @@ void World::updateBarrier(float dt)
 
 void World::render()
 {
+    glEnable(GL_DEPTH_TEST);
+    glDisable(GL_BLEND);
+
     shader.use();
 
     // Projection
@@ -143,6 +172,11 @@ void World::render()
         barrier.draw(shader);
     }
 
+    // Disable depth and enable blending for UI
+    glDisable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	uiShader.use();
 
     glm::mat4 orthoProj = glm::ortho(0.0f, (float)WINDOW_WIDTH, (float)WINDOW_HEIGHT, 0.0f);
@@ -152,12 +186,27 @@ void World::render()
     glm::mat4 identityView = glm::mat4(1.0f);
     glUniformMatrix4fv(glGetUniformLocation(uiShader.getID(), "u_View"), 1, GL_FALSE, glm::value_ptr(identityView));
 
-    score.draw(uiShader, WINDOW_WIDTH, WINDOW_HEIGHT);
+    score.draw(uiShader);
 
     //SDL_RenderPresent(renderer);  // causes black spasms
 }
 
+bool World::checkCollision(const Player& player, const Barrier& barrier)
+{
+    // Check if the barrier is close to the player's z-axis
+    if (barrier.getPosition().z >= player.getPosition().z - 1.0f && barrier.getPosition().z <= player.getPosition().z + 1.0f) {
+        // Check if the barrier is in the same lane as the player
+        if (barrier.getPosition().x == player.getPosition().x) {
+            return true;  // Collision detected
+        }
+    }
+    return false;  // No collision
+}
+
 void World::takeDMG()
 {
-    
+    playerHealth = playerHealth - 1;
+
+    std::cout << "You have " << playerHealth << " more lives" << std::endl;
+
 }

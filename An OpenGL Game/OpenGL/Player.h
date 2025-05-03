@@ -21,12 +21,15 @@ public:
 
 	float getSpeed() const { return m_speed; }
 
+	int playerHP;
+
 private:
 	Model m_model;
 	Texture m_texture;
 	glm::vec3 m_position;
 	glm::vec3 m_velocity;
 	float m_speed = 10.0f;
+
 
 	int currentLane = 0;
 	int m_laneSpace = 20;
