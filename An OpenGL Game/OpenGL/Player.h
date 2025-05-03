@@ -21,6 +21,9 @@ public:
 
 	float getSpeed() const { return m_speed; }
 
+	bool playerDeath() const { return m_playerDeath; }
+	void setPlayerDeath(bool death) { m_playerDeath = death; }
+
 	int playerHP;
 
 private:
@@ -30,6 +33,7 @@ private:
 	glm::vec3 m_velocity;
 	float m_speed = 10.0f;
 
+	bool m_playerDeath = false;
 
 	int currentLane = 0;
 	int m_laneSpace = 20;

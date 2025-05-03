@@ -17,6 +17,9 @@ public:
 	void setPosition(const glm::vec3& pos);
 	const glm::vec3& getPosition() const;
 
+	bool getHasBeenPassed() const { return m_hasBeenPassed; }
+	void setHasBeenPassed(bool passed) { m_hasBeenPassed = passed; }
+
 	bool getHasCollided() const { return hasCollidedWithPlayer; }
 	void setHasCollided(bool collided) { hasCollidedWithPlayer = collided; }
 private:
@@ -27,5 +30,5 @@ private:
 
 	bool hasCollidedWithPlayer = false;
 
-
+	bool m_hasBeenPassed = false;
 };

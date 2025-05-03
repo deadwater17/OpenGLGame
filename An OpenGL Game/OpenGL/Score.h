@@ -17,12 +17,14 @@ public:
     Score();
     ~Score();
 
-    void update(int amount);
+    void increaseScore(int amount);
     void draw(uiShader& uishader);
+
+    int getScore() const { return m_score; }
 
 private:
     int m_score;
-    int width, height;
+    int m_width, m_height;
     std::string text;
     GLuint m_texture;
     TTF_Font* m_font;

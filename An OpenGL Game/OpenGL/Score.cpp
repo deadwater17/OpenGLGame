@@ -17,6 +17,8 @@ Score::Score()
     : m_score(0)
     , m_texture(0)
     , m_font(nullptr) 
+    , m_width(NULL)
+    , m_height(NULL)
 {
 
     if (TTF_Init() == -1) {
@@ -36,9 +38,10 @@ Score::~Score() {
     TTF_Quit();
 }
 
-void Score::update(int amount) {
+void Score::increaseScore(int amount) 
+{
     m_score += amount;
-    updateTexture("0");
+    updateTexture("Sore: " + std::to_string(m_score));
 }
 
 void Score::updateTexture(const std::string& newText) 
@@ -53,8 +56,8 @@ void Score::updateTexture(const std::string& newText)
         return;
     }
 
-    width = surface->w;
-	height = surface->h;
+    m_width = surface->w;
+	m_height = surface->h;
 
     if (m_texture) glDeleteTextures(1, &m_texture);
 
@@ -106,7 +109,7 @@ void Score::draw(uiShader& uishader)
     glBindTexture(GL_TEXTURE_2D, m_texture);
 
     glm::mat4 model = glm::translate(glm::mat4(1.0f),m_pos);
-    model = glm::scale(model, glm::vec3(width, height, 1.0f));
+    model = glm::scale(model, glm::vec3(m_width, m_height, 1.0f));
 
     glUniformMatrix4fv(glGetUniformLocation(uishader.getID(), "u_Model"), 1, GL_FALSE, glm::value_ptr(model));
 

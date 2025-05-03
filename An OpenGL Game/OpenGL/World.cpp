@@ -41,8 +41,7 @@ void World::update(float dt, const Uint8* keyboardState)
 
     updateRoads();
     updateBarrier(dt);
-
-    score.update(1);
+    
 }
 
 void World::handleInput(float dt, const Uint8* keyboardState)
@@ -82,28 +81,27 @@ void World::updateBarrier(float dt)
 
     for (size_t i = 0; i < m_barriers.size(); ++i) 
     {
-        try 
-        {
-            Barrier& b = m_barriers.at(i);
-            b.update(dt, player.getSpeed());
+        Barrier& b = m_barriers.at(i);
+        b.update(dt, player.getSpeed());
 
-            if (checkCollision(player, b)) 
-            {
-                if (!b.getHasCollided()) 
-                {
-                    std::cout << "Collision detected with barrier " << i << " at position " << b.getPosition().z << std::endl;
-                    takeDMG();
-                    b.setHasCollided(true); // Mark as handled
-                }
-            }
-            else
-            {
-                b.setHasCollided(false); // Reset flag when no longer colliding
-            }
-
-        catch (const std::out_of_range& e) 
+    if (checkCollision(player, b)) 
         {
-            std::cerr << "Caught out_of_range exception while accessing barrier " << i << std::endl;
+            if (!b.getHasCollided()) 
+            {
+                takeDMG();
+                b.setHasCollided(true);
+            }
+        }
+        else 
+        {
+            b.setHasCollided(false);
+
+            if (!b.getHasBeenPassed() && b.getPosition().z < player.getPosition().z)
+            {
+                b.setHasBeenPassed(true);
+                score.increaseScore(1);
+                std::cout << "Score increased! New score: " << score.getScore() << std::endl;
+            }
         }
     }
 
@@ -210,3 +208,4 @@ void World::takeDMG()
     std::cout << "You have " << playerHealth << " more lives" << std::endl;
 
 }
+
