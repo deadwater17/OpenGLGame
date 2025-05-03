@@ -138,6 +138,7 @@
     <ClCompile Include="Barrier.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="LightManager.cpp" />
     <ClCompile Include="Load_Text_Texture.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -158,6 +159,7 @@
     <ClInclude Include="Barrier.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="LightManager.h" />
     <ClInclude Include="Load_Text_Texture.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />

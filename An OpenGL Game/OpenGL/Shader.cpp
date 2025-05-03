@@ -45,8 +45,8 @@ const GLchar* fragmentShaderSrc =
 "float spec = pow (max(dot(viewDir, reflectDir), 0.0),32);" \
 "vec3 specular = spec * specularColor;              " \
 "                                                   " \
-"vec4 viewPos = inverse(u_View) * vec4 (0,0,0,1);" \
-""\
+"vec4 viewPos = inverse(u_View) * vec4 (0,0,0,1);   " \
+"                                                   "\
 "vec4 tex = texture2D (u_Texture, v_TexCoord);      " \
 "vec3 lighting = diffuse + specular;                " \
 "gl_FragColor = vec4(lighting,1)* tex;              " \

@@ -41,6 +41,8 @@ void World::update(float dt, const Uint8* keyboardState)
 
     updateRoads();
     updateBarrier(dt);
+
+    lightManager.update(player.getPosition());
     
 }
 
@@ -138,6 +140,8 @@ void World::render()
     glDisable(GL_BLEND);
 
     shader.use();
+
+    lightManager.sendToShader(shader.getID());
 
     // Projection
     //glm::mat4 projectionMatrix = glm::mat4(1.0f);
