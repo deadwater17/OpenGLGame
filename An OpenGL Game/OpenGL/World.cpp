@@ -122,7 +122,8 @@ void World::updateBarrier(float dt)
         Barrier newBarrier("models/barrier.obj", "models/barrier_Diffuse.png");
         newBarrier.setPosition(glm::vec3(laneOffset, barrierPos.y, player.getPosition().z + 100.0f));
 
-        try {
+        try 
+        {
             //std::cout << "Spawning new barrier at position: " << newBarrier.getPosition().z << std::endl;
             m_barriers.push_back(newBarrier);
             //std::cout << "New barrier spawned. Total barriers: " << m_barriers.size() << std::endl;
@@ -140,6 +141,7 @@ void World::render()
     glDisable(GL_BLEND);
 
     shader.use();
+    //std::cout << "Normal Shader" << std::endl;
 
     lightManager.sendToShader(shader.getID());
 
@@ -180,13 +182,16 @@ void World::render()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	uiShader.use();
+    //std::cout << "UI Shader" << std::endl;
 
     glm::mat4 orthoProj = glm::ortho(0.0f, (float)WINDOW_WIDTH, (float)WINDOW_HEIGHT, 0.0f);
     glUniformMatrix4fv(glGetUniformLocation(uiShader.getID(), "u_Projection"), 1, GL_FALSE, glm::value_ptr(orthoProj));
 
     // View matrix can be identity for 2D
     glm::mat4 identityView = glm::mat4(1.0f);
-    glUniformMatrix4fv(glGetUniformLocation(uiShader.getID(), "u_View"), 1, GL_FALSE, glm::value_ptr(identityView));
+    identityView = glm::translate(identityView, glm::vec3(1, 1, 0)); // translated
+    identityView = glm::scale(identityView, glm::vec3(100, 100, 1));// scale 
+    glUniformMatrix4fv(glGetUniformLocation(uiShader.getID(), "u_Model"), 1, GL_FALSE, glm::value_ptr(identityView));
 
     score.draw(uiShader);
 

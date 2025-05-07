@@ -93,8 +93,6 @@ Shader::Shader()
     , vertexShaderId(0)
     , fragmentShaderId(0)
 {
-
-
     // Creating new vertex shader, attaching source code, compiling it and checking for errors
     GLuint vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShaderId, 1, &vertexShaderSrc, NULL);
@@ -139,7 +137,8 @@ Shader::Shader()
     {
         throw std::exception();
     }
-        
+    
+    std::cout << "Shaders Initialised" << std::endl;
 }
 
 void Shader::compile(const GLchar* vertexSrc, const GLchar* fragmentSrc)
@@ -180,6 +179,8 @@ void Shader::compile(const GLchar* vertexSrc, const GLchar* fragmentSrc)
     {
         throw std::runtime_error("Failed to link shader program.");
     }
+
+
 }
 
 Shader::~Shader()

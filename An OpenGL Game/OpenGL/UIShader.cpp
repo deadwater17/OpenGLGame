@@ -4,20 +4,20 @@ const GLchar* uivertexShaderSrc =
 "attribute vec2 a_Position;             " \
 "attribute vec2 a_TexCoord;             " \
 "uniform mat4 u_Projection;             " \
+"uniform mat4 u_Model;                  " \
 "varying vec2 v_TexCoord;               " \
 "                                       " \
 "void main() {                          " \
-"gl_Position = u_Projection * vec4(a_Position,0.0,1.0);    " \
+"gl_Position = u_Projection * u_Model * vec4(a_Position,0.0,1.0);   " \
 "v_TexCoord = a_TexCoord;               " \
 "}                                      ";
-
 
 const GLchar* uifragmentShaderSrc =
 "uniform sampler2D u_Texture;           " \
 "varying vec2 v_TexCoord;               " \
 "                                       " \
 "void main() {                          " \
-"gl_FragColor = texture2D(u_Texture, v_TexCoord);           " \
+"gl_FragColor = texture2D(u_Texture, v_TexCoord);   " \
 "}                                      ";
 
 uiShader::uiShader()
@@ -77,10 +77,12 @@ uiShader::uiShader()
         throw std::exception();
     }
 
+    std::cout << "UI Shader Initialised" << std::endl;
 }
 
 void uiShader::compile(const GLchar* vertexSrc, const GLchar* fragmentSrc)
 {
+
     vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShaderId, 1, &vertexSrc, NULL);
     glCompileShader(vertexShaderId);

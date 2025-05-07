@@ -1,9 +1,8 @@
 #include "Score.h"
 
 
-
+/*
 const GLfloat quadVertices[] = {
-    //  X     Y       U     V
     0.0f, 1.0f,   0.0f, 1.0f,
     0.0f, 0.0f,   0.0f, 0.0f,
     1.0f, 0.0f,   1.0f, 0.0f,
@@ -12,6 +11,7 @@ const GLfloat quadVertices[] = {
     1.0f, 0.0f,   1.0f, 0.0f,
     1.0f, 1.0f,   1.0f, 1.0f
 };
+*/
 
 Score::Score() 
     : m_score(0)
@@ -74,7 +74,6 @@ void Score::updateTexture(const std::string& newText)
 
 void Score::setupQuad()
 {
-    // Define vertices for a 1x1 quad (two triangles forming a rectangle)
     float quadVertices[] = {
         // positions     // texCoords
         0.0f, 1.0f,      0.0f, 1.0f,

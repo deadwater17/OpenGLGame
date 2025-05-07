@@ -1,6 +1,5 @@
 #include "Load_Text_Texture.h"
 
-// Load a texture from a file
 SDL_Texture* loadTexture(const char* path, SDL_Renderer* renderer)
 {
     SDL_Texture* newTexture = NULL;
