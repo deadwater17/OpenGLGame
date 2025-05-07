@@ -31,10 +31,9 @@ Just done:
 changed the tilt of the camera and the height of it, now it's 3rd person and can see when barrier past the object
 
 Issues:
-
-
-Need to ask Karsten: UI is just not displaying
-
+Created a blank square now
+set road quad = normal 0,1,0
+Score draw(), m_texture is wrong, part of the texture is rendering on the barrier
 
 Make the window resizable
 Model Height isn't perfect

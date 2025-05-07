@@ -51,7 +51,8 @@ void Score::updateTexture(const std::string& newText)
     SDL_Color color = { 255, 255, 255, 255 }; // white
 
     SDL_Surface* surface = TTF_RenderText_Blended(m_font, text.c_str(), color);
-    if (!surface) {
+    if (!surface) 
+    {
         std::cerr << "Failed to render text: " << TTF_GetError() << std::endl;
         return;
     }
@@ -103,14 +104,19 @@ void Score::setupQuad()
 
 void Score::draw(uiShader& uishader) 
 {
-    glm::vec3 m_pos = glm::vec3(20.0f, 20.0f, 0.0f);
+    //glm::vec3 m_pos = glm::vec3(20.0f, 20.0f, 0.0f);
 
     glBindTexture(GL_TEXTURE_2D, m_texture);
 
-    glm::mat4 model = glm::translate(glm::mat4(1.0f),m_pos);
-    model = glm::scale(model, glm::vec3(m_width, m_height, 1.0f));
+    //glm::mat4 model = glm::translate(glm::mat4(1.0f),m_pos);
+    //model = glm::scale(model, glm::vec3(m_width, m_height, 1.0f));
 
-    glUniformMatrix4fv(glGetUniformLocation(uishader.getID(), "u_Model"), 1, GL_FALSE, glm::value_ptr(model));
+    //glUniformMatrix4fv(glGetUniformLocation(uishader.getID(), "u_Model"), 1, GL_FALSE, glm::value_ptr(model));
+
+    if (!quadVAO)
+    {
+        setupQuad();
+    }
 
     // Bind VAO/VBO for your quad (e.g., two triangles making a rectangle)
     glBindVertexArray(quadVAO);

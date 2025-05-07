@@ -88,6 +88,7 @@ const GLchar* fragmentShaderSrc =
 "gl_FragColor = vec4(lighting,1)* tex;              " \
 "}                                                  ";
 
+
 Shader::Shader()
 	: programId(0)
     , vertexShaderId(0)
