@@ -21,6 +21,8 @@ void Player::handleInput(const Uint8* keyboardState, float dt)
 {
     m_velocity.z += 1.0f;
 
+    std::cout << "Player is at " << m_position.z << std::endl;
+
     static bool aPressed = false;
     static bool dPressed = false;
 

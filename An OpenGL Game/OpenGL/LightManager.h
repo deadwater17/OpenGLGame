@@ -21,7 +21,7 @@ public:
 private:
     std::vector<Light> lights;
     float lastSpawnZ = 0.0f;
-    const float spacing = 50.0f;
+    const float spacing = 20.0f;
     const float cullDistanceBehind = 10.0f;
     const int maxLights = 8;
 };

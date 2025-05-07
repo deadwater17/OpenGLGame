@@ -17,17 +17,16 @@ LightManager::LightManager()
 void LightManager::update(const glm::vec3& playerPos)
 {
     // Spawn new lights ahead of player
-    while (playerPos.z + 50.0f > lastSpawnZ + spacing) {
-        lastSpawnZ += spacing;
-        lights.push_back(
-            {
+    while (lastSpawnZ < playerPos.z + 20.0f) {
+        lastSpawnZ += spacing;  // spacing should be 10.0f
+        lights.push_back({
             glm::vec3(0.0f, 5.0f, lastSpawnZ),
             glm::vec3(1.0f, 1.0f, 1.0f),
             1.0f
             });
 
-        std::cout << "[LightManager] Spawned light at Z = " << lastSpawnZ << std::endl;
 
+        std::cout << "Spawned light at Z = " << lastSpawnZ << std::endl;
     }
 
     // Cull lights behind player
