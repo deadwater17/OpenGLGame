@@ -189,11 +189,13 @@ void World::render()
 
     // View matrix can be identity for 2D
     glm::mat4 identityView = glm::mat4(1.0f);
-    identityView = glm::translate(identityView, glm::vec3(100, 100, 0)); // translated
+    identityView = glm::translate(identityView, glm::vec3(0, 0, 0)); // translated (position)
     identityView = glm::scale(identityView, glm::vec3(100, 100, 1)); // scale 
     glUniformMatrix4fv(glGetUniformLocation(uiShader.getID(), "u_Model"), 1, GL_FALSE, glm::value_ptr(identityView));
 
     score.draw(uiShader);
+
+    glEnable(GL_DEPTH_TEST);    // added
 
     //SDL_RenderPresent(renderer);  // causes black spasms
 }

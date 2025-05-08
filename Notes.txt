@@ -32,8 +32,9 @@ changed the tilt of the camera and the height of it, now it's 3rd person and can
 
 Issues:
 Created a blank square now
-set road quad = normal 0,1,0
-Score draw(), m_texture is wrong, part of the texture is rendering on the barrier
+for road, set road quad = normal 0,1,0
+
+Fixed
 
 Make the window resizable
 Model Height isn't perfect

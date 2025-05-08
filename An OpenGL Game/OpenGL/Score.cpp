@@ -1,6 +1,5 @@
 #include "Score.h"
 
-
 /*
 const GLfloat quadVertices[] = {
     0.0f, 1.0f,   0.0f, 1.0f,
@@ -30,6 +29,8 @@ Score::Score()
         std::cerr << "Failed to load font: " << TTF_GetError() << std::endl;
     }
 
+
+	updateTexture("Score: 0");
 }
 
 Score::~Score() {
@@ -106,6 +107,8 @@ void Score::draw(uiShader& uishader)
 {
     //glm::vec3 m_pos = glm::vec3(20.0f, 20.0f, 0.0f);
 
+
+
     glBindTexture(GL_TEXTURE_2D, m_texture);
 
     //glm::mat4 model = glm::translate(glm::mat4(1.0f),m_pos);
@@ -121,4 +124,7 @@ void Score::draw(uiShader& uishader)
     // Bind VAO/VBO for your quad (e.g., two triangles making a rectangle)
     glBindVertexArray(quadVAO);
     glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glBindVertexArray(0);
 }
