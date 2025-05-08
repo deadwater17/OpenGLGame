@@ -31,6 +31,7 @@ Just done:
 changed the tilt of the camera and the height of it, now it's 3rd person and can see when barrier past the object
 
 Issues:
+change font size cuz it looks like the font is covering the bottom half of the screen
 Created a blank square now
 for road, set road quad = normal 0,1,0
 
