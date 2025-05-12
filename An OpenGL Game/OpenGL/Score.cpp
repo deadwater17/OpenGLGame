@@ -22,13 +22,13 @@ Score::Score()
         std::cerr << "TTF_Init failed: " << TTF_GetError() << std::endl;
     }
 
-    m_font = TTF_OpenFont("ShineTypewriter-lgwzd.ttf", 48); 
+    m_font = TTF_OpenFont("ShineTypewriter-lgwzd.ttf", 6); 
     if (!m_font) {
         std::cerr << "Failed to load font: " << TTF_GetError() << std::endl;
     }
 
-
 	updateTexture("Score: 0");
+
 }
 
 Score::~Score() {
@@ -50,6 +50,10 @@ void Score::updateTexture(const std::string& newText)
     SDL_Color color = { 255, 255, 255, 255 }; // white
 
     SDL_Surface* surface = TTF_RenderText_Blended(m_font, text.c_str(), color);
+	if (!surface)
+	{
+		std::cerr << "Created surface" << std::endl;
+	}
     if (!surface) 
     {
         std::cerr << "Failed to render text: " << TTF_GetError() << std::endl;
@@ -63,26 +67,31 @@ void Score::updateTexture(const std::string& newText)
 
     glGenTextures(1, &m_texture);
     glBindTexture(GL_TEXTURE_2D, m_texture);
+    std::cout << "Texture ID: " << m_texture << std::endl;
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w, surface->h, 0,
-        GL_BGRA, GL_UNSIGNED_BYTE, surface->pixels);
+        GL_RGBA, GL_UNSIGNED_BYTE, surface->pixels);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    SDL_SaveBMP(surface, "debug_font.bmp");
 
     SDL_FreeSurface(surface);
 }
 
 void Score::setupQuad()
 {
-    float quadVertices[] = {
-        // positions     // texCoords
-        0.0f, 1.0f,      0.0f, 1.0f,
-        1.0f, 0.0f,      1.0f, 0.0f,
-        0.0f, 0.0f,      0.0f, 0.0f,
+    float w = score_width, h = score_height;
 
-        0.0f, 1.0f,      0.0f, 1.0f,
-        1.0f, 1.0f,      1.0f, 1.0f,
-        1.0f, 0.0f,      1.0f, 0.0f
+    float quadVertices[] = {
+        // positions  // texCoords
+        0.0f, 1.0f,      0.0f, 0.0f,  // Top-left (V=0)
+        1.0f, 0.0f,      1.0f, 1.0f,  // Bottom-right (V=1)
+        0.0f, 0.0f,      0.0f, 1.0f,  // Bottom-left (V=1)
+
+        0.0f, 1.0f,      0.0f, 0.0f,  // Top-left (V=0)
+        1.0f, 1.0f,      1.0f, 0.0f,  // Top-right (V=0)
+        1.0f, 0.0f,      1.0f, 1.0f   // Bottom-right (V=1)
     };
 
     // Create and bind VAO/VBO for the quad
@@ -103,12 +112,31 @@ void Score::setupQuad()
 
 void Score::draw(uiShader& uishader) 
 {
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     glBindTexture(GL_TEXTURE_2D, m_texture);
 
     if (!quadVAO)
     {
         setupQuad();
     }
+
+    // Update quad vertices to match text size
+    float vertices[] = {
+        // positions      // texCoords
+        0.0f, score_height,   0.0f, 0.0f,  // Top-left
+        score_width, 0.0f,    1.0f, 1.0f,  // Bottom-right
+        0.0f, 0.0f,       0.0f, 1.0f,  // Bottom-left
+
+        0.0f, score_height,   0.0f, 0.0f,  // Top-left
+        score_width, score_height, 1.0f, 0.0f,  // Top-right
+        score_width, 0.0f,    1.0f, 1.0f   // Bottom-right
+    };
+
+	glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
 
     glBindVertexArray(quadVAO);
     glDrawArrays(GL_TRIANGLES, 0, 6);
