@@ -1,5 +1,4 @@
 #include "Score.h"
-
 /*
 const GLfloat quadVertices[] = {
     0.0f, 1.0f,   0.0f, 1.0f,
@@ -11,20 +10,19 @@ const GLfloat quadVertices[] = {
     1.0f, 1.0f,   1.0f, 1.0f
 };
 */
-
 Score::Score() 
     : m_score(0)
     , m_texture(0)
     , m_font(nullptr) 
-    , m_width(NULL)
-    , m_height(NULL)
+    , score_width(NULL)
+    , score_height(NULL)
 {
 
     if (TTF_Init() == -1) {
         std::cerr << "TTF_Init failed: " << TTF_GetError() << std::endl;
     }
 
-    m_font = TTF_OpenFont("ShineTypewriter-lgwzd.ttf", 28); 
+    m_font = TTF_OpenFont("ShineTypewriter-lgwzd.ttf", 48); 
     if (!m_font) {
         std::cerr << "Failed to load font: " << TTF_GetError() << std::endl;
     }
@@ -58,8 +56,8 @@ void Score::updateTexture(const std::string& newText)
         return;
     }
 
-    m_width = surface->w;
-	m_height = surface->h;
+    score_width = surface->w;
+	score_height = surface->h;
 
     if (m_texture) glDeleteTextures(1, &m_texture);
 
@@ -105,26 +103,17 @@ void Score::setupQuad()
 
 void Score::draw(uiShader& uishader) 
 {
-    //glm::vec3 m_pos = glm::vec3(20.0f, 20.0f, 0.0f);
-
-
-
     glBindTexture(GL_TEXTURE_2D, m_texture);
-
-    //glm::mat4 model = glm::translate(glm::mat4(1.0f),m_pos);
-    //model = glm::scale(model, glm::vec3(m_width, m_height, 1.0f));
-
-    //glUniformMatrix4fv(glGetUniformLocation(uishader.getID(), "u_Model"), 1, GL_FALSE, glm::value_ptr(model));
 
     if (!quadVAO)
     {
         setupQuad();
     }
 
-    // Bind VAO/VBO for your quad (e.g., two triangles making a rectangle)
     glBindVertexArray(quadVAO);
     glDrawArrays(GL_TRIANGLES, 0, 6);
 
     glBindTexture(GL_TEXTURE_2D, 0);
     glBindVertexArray(0);
 }
+

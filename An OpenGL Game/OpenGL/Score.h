@@ -8,6 +8,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
+#include <map>
 
 #include "uiShader.h"
 
@@ -22,9 +23,11 @@ public:
 
     int getScore() const { return m_score; }
 
+    int score_width, score_height;
+
 private:
     int m_score;
-    int m_width, m_height;
+    
     std::string text;
     GLuint m_texture;
     TTF_Font* m_font;
