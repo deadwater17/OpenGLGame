@@ -23,11 +23,14 @@ public:
 
     int getScore() const { return m_score; }
 
-    int score_width, score_height;
+    int getWidth() const { return score_width; }
+    int getHeight() const { return score_height; }
 
 private:
     int m_score;
     
+    int score_width, score_height;
+
     std::string text;
     GLuint m_texture;
     TTF_Font* m_font;

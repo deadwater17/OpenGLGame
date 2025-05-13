@@ -1,15 +1,5 @@
 #include "Score.h"
-/*
-const GLfloat quadVertices[] = {
-    0.0f, 1.0f,   0.0f, 1.0f,
-    0.0f, 0.0f,   0.0f, 0.0f,
-    1.0f, 0.0f,   1.0f, 0.0f,
 
-    0.0f, 1.0f,   0.0f, 1.0f,
-    1.0f, 0.0f,   1.0f, 0.0f,
-    1.0f, 1.0f,   1.0f, 1.0f
-};
-*/
 Score::Score() 
     : m_score(0)
     , m_texture(0)
@@ -40,7 +30,9 @@ Score::~Score() {
 void Score::increaseScore(int amount) 
 {
     m_score += amount;
-    updateTexture("Sore: " + std::to_string(m_score));
+	std::string scoreText = "Score: " + std::to_string(m_score);
+    updateTexture(scoreText);
+	std::cout << scoreText << std::endl;
 }
 
 void Score::updateTexture(const std::string& newText) 
@@ -50,7 +42,7 @@ void Score::updateTexture(const std::string& newText)
     SDL_Color color = { 255, 255, 255, 255 }; // white
 
     SDL_Surface* surface = TTF_RenderText_Blended(m_font, text.c_str(), color);
-	if (!surface)
+	if (surface)
 	{
 		std::cerr << "Created surface" << std::endl;
 	}
@@ -68,15 +60,26 @@ void Score::updateTexture(const std::string& newText)
     glGenTextures(1, &m_texture);
     glBindTexture(GL_TEXTURE_2D, m_texture);
     std::cout << "Texture ID: " << m_texture << std::endl;
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w, surface->h, 0,
-        GL_RGBA, GL_UNSIGNED_BYTE, surface->pixels);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w, surface->h, 0,
+        GL_BGRA, GL_UNSIGNED_BYTE, surface->pixels);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     SDL_SaveBMP(surface, "debug_font.bmp");
 
     SDL_FreeSurface(surface);
+
+    if (quadVAO) {
+        glDeleteVertexArrays(1, &quadVAO);
+        quadVAO = 0;
+    }
+    if (quadVBO) {
+        glDeleteBuffers(1, &quadVBO);
+        quadVBO = 0;
+    }
+    setupQuad();
 }
 
 void Score::setupQuad()
@@ -85,13 +88,13 @@ void Score::setupQuad()
 
     float quadVertices[] = {
         // positions  // texCoords
-        0.0f, 1.0f,      0.0f, 0.0f,  // Top-left (V=0)
-        1.0f, 0.0f,      1.0f, 1.0f,  // Bottom-right (V=1)
+        0.0f, h,      0.0f, 0.0f,  // Top-left (V=0)
+        w, 0.0f,      1.0f, 1.0f,  // Bottom-right (V=1)
         0.0f, 0.0f,      0.0f, 1.0f,  // Bottom-left (V=1)
 
-        0.0f, 1.0f,      0.0f, 0.0f,  // Top-left (V=0)
-        1.0f, 1.0f,      1.0f, 0.0f,  // Top-right (V=0)
-        1.0f, 0.0f,      1.0f, 1.0f   // Bottom-right (V=1)
+        0.0f, h,      0.0f, 0.0f,  // Top-left (V=0)
+        w, h,      1.0f, 0.0f,  // Top-right (V=0)
+        w, 0.0f,      1.0f, 1.0f   // Bottom-right (V=1)
     };
 
     // Create and bind VAO/VBO for the quad
@@ -134,6 +137,7 @@ void Score::draw(uiShader& uishader)
         score_width, score_height, 1.0f, 0.0f,  // Top-right
         score_width, 0.0f,    1.0f, 1.0f   // Bottom-right
     };
+
 
 	glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);

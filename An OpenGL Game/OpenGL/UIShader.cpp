@@ -23,7 +23,7 @@ const GLchar* uifragmentShaderSrc =
 uiShader::uiShader()
     : programId(0)
     , vertexShaderId(0)
-    , fragmentShaderId(0)
+    , fragmentShaderId(1)
 {
 
 
