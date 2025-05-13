@@ -42,12 +42,6 @@
     <ClCompile Include="Barrier.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Render_Text_Texture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Load_Text_Texture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -95,12 +89,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Barrier.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Load_Text_Texture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Render_Text_Texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Game.h">

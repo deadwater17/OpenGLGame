@@ -12,12 +12,13 @@ Score::Score()
         std::cerr << "TTF_Init failed: " << TTF_GetError() << std::endl;
     }
 
-    m_font = TTF_OpenFont("ShineTypewriter-lgwzd.ttf", 6); 
+    m_font = TTF_OpenFont("ShineTypewriter-lgwzd.ttf", 24); 
     if (!m_font) {
         std::cerr << "Failed to load font: " << TTF_GetError() << std::endl;
     }
 
 	updateTexture("Score: 0");
+
 
 }
 
@@ -67,7 +68,14 @@ void Score::updateTexture(const std::string& newText)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    SDL_SaveBMP(surface, "debug_font.bmp");
+	// Prevent texture from bleeding
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    SDL_SaveBMP(surface, "Score.png");
+
+    Uint32* pixels = (Uint32*)surface->pixels;
+    std::cout << "Pixel at (0, 0): " << pixels[0] << std::endl;
 
     SDL_FreeSurface(surface);
 
@@ -87,14 +95,14 @@ void Score::setupQuad()
     float w = score_width, h = score_height;
 
     float quadVertices[] = {
-        // positions  // texCoords
-        0.0f, h,      0.0f, 0.0f,  // Top-left (V=0)
-        w, 0.0f,      1.0f, 1.0f,  // Bottom-right (V=1)
-        0.0f, 0.0f,      0.0f, 1.0f,  // Bottom-left (V=1)
+        // positions     // texCoords
+        0.0f, 1.0f,      0.0f, 1.0f,
+        1.0f, 0.0f,      1.0f, 0.0f,
+        0.0f, 0.0f,      0.0f, 0.0f,
 
-        0.0f, h,      0.0f, 0.0f,  // Top-left (V=0)
-        w, h,      1.0f, 0.0f,  // Top-right (V=0)
-        w, 0.0f,      1.0f, 1.0f   // Bottom-right (V=1)
+        0.0f, 1.0f,      0.0f, 1.0f,
+        1.0f, 1.0f,      1.0f, 1.0f,
+        1.0f, 0.0f,      1.0f, 0.0f
     };
 
     // Create and bind VAO/VBO for the quad
@@ -125,22 +133,6 @@ void Score::draw(uiShader& uishader)
     {
         setupQuad();
     }
-
-    // Update quad vertices to match text size
-    float vertices[] = {
-        // positions      // texCoords
-        0.0f, score_height,   0.0f, 0.0f,  // Top-left
-        score_width, 0.0f,    1.0f, 1.0f,  // Bottom-right
-        0.0f, 0.0f,       0.0f, 1.0f,  // Bottom-left
-
-        0.0f, score_height,   0.0f, 0.0f,  // Top-left
-        score_width, score_height, 1.0f, 0.0f,  // Top-right
-        score_width, 0.0f,    1.0f, 1.0f   // Bottom-right
-    };
-
-
-	glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
 
     glBindVertexArray(quadVAO);
     glDrawArrays(GL_TRIANGLES, 0, 6);
