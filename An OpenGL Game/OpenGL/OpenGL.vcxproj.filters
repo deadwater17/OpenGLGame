@@ -103,5 +103,8 @@
     <ClInclude Include="LightManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="lightShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
