@@ -39,4 +39,5 @@ private:
 
     void setupQuad();
     void updateTexture(const std::string& newText);
+    void updateTextureFromImage(const std::string& imagePath);
 };
