@@ -9,12 +9,12 @@ Score::Score()
 {
 
     if (TTF_Init() == -1) {
-        std::cerr << "TTF_Init failed: " << TTF_GetError() << std::endl;
+        std::cout << "TTF_Init failed: " << TTF_GetError() << std::endl;
     }
 
     m_font = TTF_OpenFont("ShineTypewriter-lgwzd.ttf", 24); 
     if (!m_font) {
-        std::cerr << "Failed to load font: " << TTF_GetError() << std::endl;
+        std::cout << "Failed to load font: " << TTF_GetError() << std::endl;
     }
 
 	updateTexture("Score: 0");
@@ -40,14 +40,14 @@ void Score::updateTexture(const std::string& newText)
 
     SDL_Color color = { 255, 255, 255, 255 }; // Transparent
 
-    SDL_Surface* surface = TTF_RenderText_Solid(m_font, "Score", color);
+    SDL_Surface* surface = TTF_RenderText_Solid(m_font, text.c_str(), color);
 	if (surface)
 	{
-        std::cerr << "Surface created. Size: " << surface->w << " x " << surface->h << std::endl;
+        std::cout << "Surface created. Size: " << surface->w << " x " << surface->h << std::endl;
 	}
     if (!surface) 
     {
-        std::cerr << "Failed to render text: " << TTF_GetError() << std::endl;
+        std::cout << "Failed to render text: " << TTF_GetError() << std::endl;
         return;
     }
 

@@ -129,7 +129,7 @@ void World::updateBarrier(float dt)
             //std::cout << "New barrier spawned. Total barriers: " << m_barriers.size() << std::endl;
         }
         catch (const std::exception& e) {
-            std::cerr << "Exception caught while adding new barrier: " << e.what() << std::endl;
+            std::cout << "Exception caught while adding new barrier: " << e.what() << std::endl;
         }
     }
 }

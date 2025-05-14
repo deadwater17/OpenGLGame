@@ -41,7 +41,7 @@ uiShader::uiShader()
         glGetShaderiv(vertexShaderId, GL_INFO_LOG_LENGTH, &maxLength);
         std::vector<GLchar> errorLog(maxLength);
         glGetShaderInfoLog(vertexShaderId, maxLength, &maxLength, &errorLog[0]);
-        std::cerr << &errorLog[0] << std::endl;
+        std::cout << &errorLog[0] << std::endl;
         throw std::runtime_error("Failed to compile fragment shader.");
     }
 
@@ -105,7 +105,7 @@ void uiShader::compile(const GLchar* vertexSrc, const GLchar* fragmentSrc)
         glGetShaderiv(fragmentShaderId, GL_INFO_LOG_LENGTH, &maxLength);
         std::vector<GLchar> errorLog(maxLength);
         glGetShaderInfoLog(fragmentShaderId, maxLength, &maxLength, &errorLog[0]);
-        std::cerr << &errorLog[0] << std::endl;
+        std::cout << &errorLog[0] << std::endl;
         throw std::runtime_error("Failed to compile fragment shader.");
     }
 

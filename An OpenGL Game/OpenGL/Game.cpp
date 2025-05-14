@@ -15,7 +15,7 @@ if (glewInit() != GLEW_OK)
 }
 
 if (TTF_Init() == -1) {
-    std::cerr << "Failed to initialize SDL_ttf: " << TTF_GetError() << std::endl;
+    std::cout << "Failed to initialize SDL_ttf: " << TTF_GetError() << std::endl;
     return -1;
 }
 
