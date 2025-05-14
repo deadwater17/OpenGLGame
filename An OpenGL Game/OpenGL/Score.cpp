@@ -16,6 +16,9 @@ Score::Score()
     if (!m_font) {
         std::cout << "Failed to load font: " << TTF_GetError() << std::endl;
     }
+    
+    updateTexture("Score: 0");
+    updateTextureFromImage("Score.png");
 }
 
 Score::~Score() {
@@ -37,51 +40,23 @@ void Score::updateTexture(const std::string& newText)
 {
     text = newText;
 
-    SDL_Color color = { 255, 255, 255, 255 }; // Transparent
+    SDL_Color color = { 255, 255, 255, 255 };
 
     SDL_Surface* surface = TTF_RenderText_Solid(m_font, text.c_str(), color);
-	if (surface)
-	{
-        std::cout << "Surface created. Size: " << surface->w << " x " << surface->h << std::endl;
-	}
-    if (!surface) 
+    if (!surface)
     {
         std::cout << "Failed to render text: " << TTF_GetError() << std::endl;
         return;
     }
 
-    score_width = surface->w;
-	score_height = surface->h;
+    std::cout << "Surface created. Size: " << surface->w << " x " << surface->h << std::endl;
 
-    if (m_texture) glDeleteTextures(1, &m_texture);
-
-    glGenTextures(1, &m_texture);
-    glBindTexture(GL_TEXTURE_2D, m_texture);
-    std::cout << "Texture ID: " << m_texture << std::endl;
-
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w, surface->h, 0,
-        GL_BGRA, GL_UNSIGNED_BYTE, surface->pixels);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	// Prevent texture from bleeding
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-    SDL_SaveBMP(surface, "Score.png");
+    // Save to PNG file
+    if (IMG_SavePNG(surface, "Score.png") != 0) {
+        std::cout << "Failed to save PNG: " << IMG_GetError() << std::endl;
+    }
 
     SDL_FreeSurface(surface);
-
-    if (quadVAO) {
-        glDeleteVertexArrays(1, &quadVAO);
-        quadVAO = 0;
-    }
-    if (quadVBO) {
-        glDeleteBuffers(1, &quadVBO);
-        quadVBO = 0;
-    }
-    setupQuad();
 }
 
 void Score::updateTextureFromImage(const std::string& imagePath)

@@ -27,26 +27,11 @@ Image-based lighting, HDR lighting
 Motion blur, depth-of-field
 Deferred rendering
 
-Just done:
-changed the tilt of the camera and the height of it, now it's 3rd person and can see when barrier past the object
-
-Issues:
-The text is still weird, need to start from scratch i say. Make a duplicate and follow a video
-
-Currently working on the scores and health, don't need to display yet, just need to work
-on the numbers of health and score
-
-Make the window resizable
-Model Height isn't perfect
-Lighting geos black as soon as the obj reaches a certain distance
-It doesn't look perfect, so i want to change up the lighting
-and then lets start working on the enemies
-and then lets start working on the UI
-
-
-Plan:
-get player health = 3
-If player y pos and the barrier pos is same
-	check if lane is same, if yes
-	health = health - 0
-display health and score
+Issue:
+1. Change the player model into something else
+2. Create a lightShader to make it point down on to the road 
+(Create 3 lights in a row first, to accommodate the player spawn lights)
+3. Create the same thing as scores for lives 
+(Just add a death PNG when player has gone past 0)
+Just update the lives png (check if player still have more than 0 lives then update texture)
+4. Just add a death screen after death
