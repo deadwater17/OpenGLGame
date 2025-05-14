@@ -18,8 +18,6 @@ Score::Score()
     }
 
 	updateTexture("Score: 0");
-
-
 }
 
 Score::~Score() {
@@ -40,12 +38,12 @@ void Score::updateTexture(const std::string& newText)
 {
     text = newText;
 
-    SDL_Color color = { 255, 255, 255, 255 }; // white
+    SDL_Color color = { 255, 255, 255, 255 }; // Transparent
 
-    SDL_Surface* surface = TTF_RenderText_Blended(m_font, text.c_str(), color);
+    SDL_Surface* surface = TTF_RenderText_Solid(m_font, "Score", color);
 	if (surface)
 	{
-		std::cerr << "Created surface" << std::endl;
+        std::cerr << "Surface created. Size: " << surface->w << " x " << surface->h << std::endl;
 	}
     if (!surface) 
     {
@@ -73,9 +71,6 @@ void Score::updateTexture(const std::string& newText)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
     SDL_SaveBMP(surface, "Score.png");
-
-    Uint32* pixels = (Uint32*)surface->pixels;
-    std::cout << "Pixel at (0, 0): " << pixels[0] << std::endl;
 
     SDL_FreeSurface(surface);
 
@@ -131,6 +126,7 @@ void Score::draw(uiShader& uishader)
 
     if (!quadVAO)
     {
+        std::cout << "Rebuilding quad" << std::endl;
         setupQuad();
     }
 
