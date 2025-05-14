@@ -16,9 +16,6 @@ Score::Score()
     if (!m_font) {
         std::cout << "Failed to load font: " << TTF_GetError() << std::endl;
     }
-
-
-	updateTexture("Score: 0");
 }
 
 Score::~Score() {
@@ -89,23 +86,23 @@ void Score::updateTexture(const std::string& newText)
 
 void Score::updateTextureFromImage(const std::string& imagePath)
 {
-    SDL_Surface* surface = IMG_Load(imagePath.c_str());
-    if (!surface)
+    SDL_Surface* img = IMG_Load(imagePath.c_str());
+    if (!img)
     {
         std::cout << "Failed to load image: " << IMG_GetError() << std::endl;
         return;
     }
 
-    score_width = surface->w;
-    score_height = surface->h;
+    score_width = img->w;
+    score_height = img->h;
 
     if (m_texture) glDeleteTextures(1, &m_texture);
 
     glGenTextures(1, &m_texture);
     glBindTexture(GL_TEXTURE_2D, m_texture);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w, surface->h, 0,
-        GL_BGRA, GL_UNSIGNED_BYTE, surface->pixels);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img->w, img->h, 0,
+        GL_BGRA, GL_UNSIGNED_BYTE, img->pixels);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -113,7 +110,7 @@ void Score::updateTextureFromImage(const std::string& imagePath)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-    SDL_FreeSurface(surface);
+    SDL_FreeSurface(img);
 
     if (quadVAO) {
         glDeleteVertexArrays(1, &quadVAO);
