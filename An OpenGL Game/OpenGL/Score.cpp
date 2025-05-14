@@ -12,7 +12,7 @@ Score::Score()
         std::cout << "TTF_Init failed: " << TTF_GetError() << std::endl;
     }
 
-    m_font = TTF_OpenFont("ShineTypewriter-lgwzd.ttf", 24); 
+    m_font = TTF_OpenFont("ShineTypewriter-lgwzd.ttf", 48); 
     if (!m_font) {
         std::cout << "Failed to load font: " << TTF_GetError() << std::endl;
     }
@@ -87,7 +87,8 @@ void Score::updateTexture(const std::string& newText)
 
 void Score::setupQuad()
 {
-    float w = score_width, h = score_height;
+    float w = static_cast<float>(score_width);
+    float h = static_cast<float>(score_height);
 
     float quadVertices[] = {
         // positions     // texCoords
