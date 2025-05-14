@@ -27,8 +27,14 @@ Image-based lighting, HDR lighting
 Motion blur, depth-of-field
 Deferred rendering
 
-Issues: 
+Just done:
+changed the tilt of the camera and the height of it, now it's 3rd person and can see when barrier past the object
+
+Issues:
 The text is still weird, need to start from scratch i say. Make a duplicate and follow a video
+
+Currently working on the scores and health, don't need to display yet, just need to work
+on the numbers of health and score
 
 Make the window resizable
 Model Height isn't perfect
