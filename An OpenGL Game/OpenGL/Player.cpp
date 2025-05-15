@@ -18,17 +18,17 @@ void Player::update(float dt)
     m_position += m_velocity * dt;
 }
 
+
 void Player::handleInput(const Uint8* keyboardState, float dt)
 {
-    m_velocity.z += 1.0f;
+    m_velocity.z += 1.0f;       // player movement, moves 1 spaces in front every time step
 
-    //std::cout << "Player is at " << m_position.z << std::endl;
 
     static bool aPressed = false;
     static bool dPressed = false;
 
-    if (keyboardState[SDL_SCANCODE_A]) {
-        if (!aPressed && currentLane > minLane) {
+    if (keyboardState[SDL_SCANCODE_A]) {            // checks if player is in the left lane
+        if (!aPressed && currentLane > minLane) {   // if so, player cant move anymore left
             currentLane--;
             m_position.x = -currentLane * m_laneSpace;
         }
@@ -38,8 +38,8 @@ void Player::handleInput(const Uint8* keyboardState, float dt)
         aPressed = false;
     }
 
-    if (keyboardState[SDL_SCANCODE_D]) {
-        if (!dPressed && currentLane < maxLane) {
+    if (keyboardState[SDL_SCANCODE_D]) {                // checks if player is in the right lane
+        if (!dPressed && currentLane < maxLane) {       // if not, it can move to the right agaub
             currentLane++;
             m_position.x = -currentLane * m_laneSpace;
         }
@@ -53,8 +53,6 @@ void Player::handleInput(const Uint8* keyboardState, float dt)
     {
         m_velocity = glm::normalize(m_velocity) * m_speed;
     }
-
-	//std::cout << "Player: " <<m_position.x << " " << m_position.y << " " << m_position.z << std::endl;
 }
 
 void Player::draw(Shader& shader)
@@ -75,10 +73,4 @@ void Player::draw(Shader& shader)
     glDrawArrays(GL_TRIANGLES, 0, m_model.vertex_count());
     glBindVertexArray(0);
 
-	//std::cout << "Player is drawn" << std::endl;
-}
-
-void Player::setScale(const glm::vec3& scl)
-{
-    scale = scl;
 }

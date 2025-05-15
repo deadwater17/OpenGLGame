@@ -13,6 +13,7 @@
 #include "Score.h"
 #include "uiShader.h"
 #include "LightManager.h"
+#include "lightShader.h"
 #include "Lives.h"
 
 #define WINDOW_WIDTH 800
@@ -42,6 +43,7 @@ private:
 	Score score;
 	LightManager lightManager;
 	Lives lives;
+	lightShader lightShader;
 
 	std::vector<Road> m_roads;
 	const float m_tileLength = 78.5f;
@@ -50,8 +52,6 @@ private:
 	int m_laneSpace = 20;	
 	float m_spawnTimer = 0.0f;
 	float m_spawnInterval = 5.0f;
-
-	int playerHealth;
 
 	void takeDMG();
 	bool checkCollision(const Player& player, const Barrier& barrier);

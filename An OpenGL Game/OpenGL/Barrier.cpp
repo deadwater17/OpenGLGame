@@ -15,10 +15,10 @@ Barrier::~Barrier()
 
 void Barrier::update(float dt, float playerSpeed)
 {
-    m_position.z -= playerSpeed * dt;
+    m_position.z -= playerSpeed * dt;       // decreases z axis as player moves forward
 }
 
-void Barrier::draw(Shader& shader)
+void Barrier::draw(Shader& shader)      // renders barrier 
 {
     shader.use();
 

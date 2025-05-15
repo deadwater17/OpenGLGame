@@ -17,7 +17,7 @@ Mesh::~Mesh()
 
 void Mesh::draw(Shader& shader) const
 {
-    shader.use();                    // Activate the shader (assuming Shader has a use() method)
+    shader.use();                   
     glBindVertexArray(VAO);         // Bind the VAO for this mesh
 
     glDrawArrays(GL_TRIANGLES, 0, 3);  // Draw 3 vertices as a triangle

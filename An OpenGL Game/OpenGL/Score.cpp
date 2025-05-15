@@ -17,8 +17,8 @@ Score::Score()
         std::cout << "Failed to load font: " << TTF_GetError() << std::endl;
     }
     
-    updateTexture("Score: 0");
-    updateTextureFromImage("Score.png");
+    updateTexture("Score: 0");      // sets score as 0 when initialised
+    updateTextureFromImage("Score.png");        // puts the png on the quad
 }
 
 Score::~Score() {
@@ -36,7 +36,7 @@ void Score::increaseScore(int amount)
     updateTextureFromImage("Score.png");
 }
 
-void Score::updateTexture(const std::string& newText) 
+void Score::updateTexture(const std::string& newText)       // craetes a score png
 {
     text = newText;
 
@@ -59,7 +59,7 @@ void Score::updateTexture(const std::string& newText)
     SDL_FreeSurface(surface);
 }
 
-void Score::updateTextureFromImage(const std::string& imagePath)
+void Score::updateTextureFromImage(const std::string& imagePath)        // displays the score png texture in the quad
 {
     SDL_Surface* img = IMG_Load(imagePath.c_str());
     if (!img)
@@ -100,7 +100,7 @@ void Score::updateTextureFromImage(const std::string& imagePath)
 
 
 
-void Score::setupQuad()
+void Score::setupQuad()     // creation of the quad to match the png axis to the quad
 {
     float w = static_cast<float>(score_width);
     float h = static_cast<float>(score_height);
@@ -140,7 +140,7 @@ void Score::draw(uiShader& uishader)
 
     glBindTexture(GL_TEXTURE_2D, m_texture);
 
-    if (!quadVAO)
+    if (!quadVAO)       // if don't have quad is null, it rebuld the quad again
     {
         std::cout << "Rebuilding quad" << std::endl;
         setupQuad();

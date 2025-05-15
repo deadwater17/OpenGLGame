@@ -8,9 +8,9 @@
 LightManager::LightManager()
 {
     lights.push_back({
-    glm::vec3(0.0f, 5.0f, 0.0f), // Position above player
+    glm::vec3(0.0f, 12.0f, 0.0f), // Position above player
     glm::vec3(1.0f, 1.0f, 1.0f), // White light
-    1.0f                         // Intensity
+    1.0f                         // How bright
         });
 }
 
@@ -18,9 +18,9 @@ void LightManager::update(const glm::vec3& playerPos)
 {
     // Spawn new lights ahead of player
     while (lastSpawnZ < playerPos.z + 20.0f) {
-        lastSpawnZ += spacing;  // spacing should be 10.0f
+        lastSpawnZ += spacing;  // spacing is 10 spaces infront
         lights.push_back({
-            glm::vec3(0.0f, 5.0f, lastSpawnZ),
+            glm::vec3(0.0f, 10.0f, lastSpawnZ),
             glm::vec3(1.0f, 1.0f, 1.0f),
             1.0f
             });
@@ -29,7 +29,7 @@ void LightManager::update(const glm::vec3& playerPos)
         std::cout << "Spawned light at Z = " << lastSpawnZ << std::endl;
     }
 
-    // Cull lights behind player
+    // Removes lights behind player model
     lights.erase(
         std::remove_if(lights.begin(), lights.end(),
             [&](const Light& light) {

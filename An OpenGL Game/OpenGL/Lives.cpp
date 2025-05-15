@@ -16,15 +16,15 @@ Lives::Lives()
         std::cout << "Failed to load font: " << TTF_GetError() << std::endl;
     }
 
-    updateIMG("Lives: 3");
-    updateTextureFromIMG("lives.png");
-}
+    updateIMG("Lives: 3");      // put lives as 3 at the start of application
+    updateTextureFromIMG("lives.png");      // renders png
+}   
 
 Lives::~Lives()
 {
 }
 
-void Lives::decreaseLives(int amount)
+void Lives::decreaseLives(int amount)       // decreases lives 
 {
 	m_lives -= amount;
 	std::string livesText = "Lives: " + std::to_string(m_lives);
@@ -33,7 +33,7 @@ void Lives::decreaseLives(int amount)
 	updateTextureFromIMG("Lives.png");
 }
 
-void Lives::draw(uiShader& uishader)
+void Lives::draw(uiShader& uishader)        // creates quad for the lives 
 {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -85,7 +85,7 @@ void Lives::setupQuad()
     glBindVertexArray(0);
 }
 
-void Lives::updateIMG(const std::string& newText)
+void Lives::updateIMG(const std::string& newText)       // creates the lives texture into a png
 {
     text = newText;
 
@@ -105,12 +105,12 @@ void Lives::updateIMG(const std::string& newText)
         std::cout << "Failed to save PNG: " << IMG_GetError() << std::endl;
     }
 
-    SDL_FreeSurface(surface);
+    SDL_FreeSurface(surface);   
 }
 
-void Lives::updateTextureFromIMG(const std::string& imagePath)
+void Lives::updateTextureFromIMG(const std::string& imagePath)      // updates the texture on the application
 {
-    SDL_Surface* img = IMG_Load(imagePath.c_str());
+    SDL_Surface* img = IMG_Load(imagePath.c_str());     // takes the image path
     if (!img)
     {
         std::cout << "Failed to load image: " << IMG_GetError() << std::endl;

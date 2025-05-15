@@ -137,8 +137,8 @@
   <ItemGroup>
     <ClCompile Include="Barrier.cpp" />
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Game.cpp" />
     <ClCompile Include="LightManager.cpp" />
+    <ClCompile Include="lightShader.cpp" />
     <ClCompile Include="Lives.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -157,7 +157,6 @@
   <ItemGroup>
     <ClInclude Include="Barrier.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="Game.h" />
     <ClInclude Include="LightManager.h" />
     <ClInclude Include="lightShader.h" />
     <ClInclude Include="Lives.h" />

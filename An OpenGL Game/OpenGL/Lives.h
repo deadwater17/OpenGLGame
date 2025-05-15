@@ -27,8 +27,9 @@ public:
     int getWidth() const { return lives_width; }
     int getHeight() const { return lives_height; }
 
-private:
     int m_lives;
+private:
+
 
     int lives_width, lives_height;
 

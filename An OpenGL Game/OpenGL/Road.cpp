@@ -12,14 +12,12 @@ Road::Road(const std::string& modelPath, const std::string& texturePath)
 Road::~Road()
 {}
 
-void Road::update(float dt, float playerSpeed)
-{
-    // unneeded now, moved to world.cpp    
-}
+void Road::update(float dt, float playerSpeed)  // uneeded
+{}
 
 void Road::draw(Shader& shader)
 {
-    shader.use();   // might not be neeeded
+    shader.use();   
 
     // Build the model matrix
     glm::mat4 modelMat = glm::mat4(1.0f);
@@ -42,7 +40,6 @@ void Road::draw(Shader& shader)
     glDrawArrays(GL_TRIANGLES, 0, model.vertex_count());
     glBindVertexArray(0);
 
-	//std::cout << "Road: " << position.x << " " << position.y << " " << position.z << std::endl;
 }
 
 void Road::setScale(const glm::vec3& scl)

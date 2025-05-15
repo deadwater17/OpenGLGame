@@ -1,6 +1,6 @@
 #include "Shader.h"
 
-const GLchar* vertexShaderSrc =
+const GLchar* vertexShaderSrc =    
 "attribute vec3 a_Position;             " \
 "attribute vec2 a_TexCoord;             " \
 "attribute vec3 a_Normal;               " \

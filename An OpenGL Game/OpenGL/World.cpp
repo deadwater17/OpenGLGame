@@ -16,33 +16,29 @@ World::World()
     : shader()
 	, uiShader()
     , mesh(std::make_unique<Mesh>(positions, sizeof(positions), colors, sizeof(colors)))
-    , player("models/curuthers.obj", "models/Whiskers_diffuse.png")
-    , road("models/ground.obj", "models/ground_Diffuse.png")
-    , barrier("models/barrier.obj", "models/barrier_Diffuse.png")
+    , player("models/curuthers.obj", "models/Whiskers_diffuse.png")     // player model
+    , road("models/ground.obj", "models/ground_Diffuse.png")        // road model and texture
+    , barrier("models/barrier.obj", "models/barrier_Diffuse.png")   
     , camera()
 {
-    playerHealth = player.playerHP;
-
-    std::cout << playerHealth << std::endl;
-
-	glm::vec3 roadPos = road.getPosition();
+	glm::vec3 roadPos = road.getPosition();     
     // spawns 4 roads ahead first
     for (int i = 0; i < 4; ++i) {
-        road.setPosition(glm::vec3(0.0f, roadPos.y, i * m_tileLength));
-        m_roads.push_back(road);
+        road.setPosition(glm::vec3(0.0f, roadPos.y, i * m_tileLength));     // spawns with the same y axis
+        m_roads.push_back(road);        
     }
 }
 
 void World::update(float dt, const Uint8* keyboardState)
 {
-    handleInput(dt, keyboardState);
+    handleInput(dt, keyboardState);     
 	player.update(dt);
     camera.update(player.getPosition(), dt);
 
-    updateRoads();
-    updateBarrier(dt);
+    updateRoads();      
+    updateBarrier(dt);      
 
-    lightManager.update(player.getPosition());
+    lightManager.update(player.getPosition());      
     
 }
 
@@ -53,7 +49,7 @@ void World::handleInput(float dt, const Uint8* keyboardState)
 
 void World::updateRoads()
 {
-    glm::vec3 playerPos = player.getPosition();
+    glm::vec3 playerPos = player.getPosition();     // gets the player position
 
     // Find the current farthest Z value
     float maxZ = 0.0f;
@@ -65,9 +61,9 @@ void World::updateRoads()
 
     for (auto& road : m_roads)
     {
-        if (road.getPosition().z + m_tileLength < playerPos.z)
+        if (road.getPosition().z + m_tileLength < playerPos.z)      
         {
-            // Move this road to be just after the farthest one
+            // Moves this road to be just after the farthest one
             road.setPosition(glm::vec3(0.0f, road.getPosition().y, maxZ + m_tileLength));
             maxZ = road.getPosition().z; // update maxZ
         }
@@ -76,22 +72,21 @@ void World::updateRoads()
 
 void World::updateBarrier(float dt)
 {
-	glm::vec3 barrierPos = barrier.getPosition();
-
-    //std::cout << "Updating barriers..." << std::endl;
-    //std::cout << "Current barrier count: " << m_barriers.size() << std::endl;
+	glm::vec3 barrierPos = barrier.getPosition();       
 
     for (size_t i = 0; i < m_barriers.size(); ++i) 
     {
-        Barrier& b = m_barriers.at(i);
-        b.update(dt, player.getSpeed());
+        Barrier& b = m_barriers.at(i);      
+        b.update(dt, player.getSpeed());        
 
     if (checkCollision(player, b)) 
         {
             if (!b.getHasCollided()) 
             {
-                takeDMG();
+                // decrease lives when player collides with barrier
                 b.setHasCollided(true);
+                takeDMG();
+                
             }
         }
         else 
@@ -101,32 +96,30 @@ void World::updateBarrier(float dt)
             if (!b.getHasBeenPassed() && b.getPosition().z < player.getPosition().z)
             {
                 b.setHasBeenPassed(true);
-                score.increaseScore(1);
+                score.increaseScore(1);         // increases score when player passed the barrier's z axis
                 std::cout << "Score increased! New score: " << score.getScore() << std::endl;
             }
         }
     }
 
     // Spawn new barriers every few seconds
-    m_spawnTimer += dt;
+    m_spawnTimer += dt;     
     if (m_spawnTimer >= m_spawnInterval)
     {
         m_spawnTimer = 0.0f;
 
-        m_spawnInterval = (rand() % 5)+1;
+        m_spawnInterval = (rand() % 5)+1;       // randomised spawn interval
 
-        // Randomly choose a lane: -1 (left), 0 (middle), 1 (right)
+        // randomly choose a lane: -1 (left), 0 (middle), 1 (right)
         int lane = (rand() % 3) - 1;
         float laneOffset = lane * m_laneSpace;
 
         Barrier newBarrier("models/barrier.obj", "models/barrier_Diffuse.png");
-        newBarrier.setPosition(glm::vec3(laneOffset, barrierPos.y, player.getPosition().z + 100.0f));
+        newBarrier.setPosition(glm::vec3(laneOffset, barrierPos.y, player.getPosition().z + 100.0f));       // spawns barrier in one of the lanes
 
         try 
         {
-            //std::cout << "Spawning new barrier at position: " << newBarrier.getPosition().z << std::endl;
             m_barriers.push_back(newBarrier);
-            //std::cout << "New barrier spawned. Total barriers: " << m_barriers.size() << std::endl;
         }
         catch (const std::exception& e) {
             std::cout << "Exception caught while adding new barrier: " << e.what() << std::endl;
@@ -141,18 +134,14 @@ void World::render()
     glDisable(GL_BLEND);
 
     shader.use();
-    //std::cout << "Normal Shader" << std::endl;
 
-    lightManager.sendToShader(shader.getID());
+    lightManager.sendToShader(lightShader.getID());
 
     // Projection
-    //glm::mat4 projectionMatrix = glm::mat4(1.0f);
     glm::mat4 projectionMatrix = glm::perspective(glm::radians(120.0f),
         (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 100.0f);
     GLint projLoc = glGetUniformLocation(shader.getID(), "u_Projection");
     glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
-
-    //glm::mat4 projection = camera.getProjectionMatrix();
 
     // Camera
     glm::mat4 viewMatrix = camera.getViewMatrix();
@@ -160,16 +149,13 @@ void World::render()
     glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
 
     mesh->draw(shader);
-	//std::cout << "Mesh Drawn" << std::endl;
 
-	player.draw(shader);
-	//std::cout << "Player Drawn" << std::endl;
+	player.draw(shader);        
 
     for(auto& road : m_roads)
 	{
 		road.draw(shader);
 	}
-	//std::cout << "Road Drawn" << std::endl;
 
     for (auto& barrier : m_barriers)
     {
@@ -180,29 +166,29 @@ void World::render()
     glDisable(GL_DEPTH_TEST);
 
 	uiShader.use();
-    //std::cout << "UI Shader" << std::endl;
 
+    // Ortho projections
     glm::mat4 orthoProj = glm::ortho(0.0f, (float)WINDOW_WIDTH, (float)WINDOW_HEIGHT, 0.0f);
     glUniformMatrix4fv(glGetUniformLocation(uiShader.getID(), "u_Projection"), 1, GL_FALSE, glm::value_ptr(orthoProj));
 
+    // score matrix
     glm::mat4 identityView = glm::mat4(1.0f);
     identityView = glm::translate(identityView, glm::vec3(10, 10, 0)); // translated (position)
-    identityView = glm::scale(identityView, glm::vec3(150, 25, 1)); // scale // glm::vec3(100, 100, 1)
+    identityView = glm::scale(identityView, glm::vec3(150, 25, 1)); // scale
     glUniformMatrix4fv(glGetUniformLocation(uiShader.getID(), "u_Model"), 1, GL_FALSE, glm::value_ptr(identityView));
 
     score.draw(uiShader);
 
+    // lives matrix
     glm::mat4 livesMat = glm::mat4(1.0f);
     livesMat = glm::translate(livesMat, glm::vec3(650, 10, 0)); // translated (position)
-    livesMat = glm::scale(livesMat, glm::vec3(150, 25, 1)); // scale // glm::vec3(100, 100, 1)
+    livesMat = glm::scale(livesMat, glm::vec3(150, 25, 1)); // scale 
     glUniformMatrix4fv(glGetUniformLocation(uiShader.getID(), "u_Model"), 1, GL_FALSE, glm::value_ptr(livesMat));
 
     lives.draw(uiShader);
 
+    glEnable(GL_DEPTH_TEST);   
 
-    glEnable(GL_DEPTH_TEST);    // added
-
-    //SDL_RenderPresent(renderer);  // causes black spasms
 }
 
 bool World::checkCollision(const Player& player, const Barrier& barrier)
@@ -211,7 +197,7 @@ bool World::checkCollision(const Player& player, const Barrier& barrier)
     if (barrier.getPosition().z >= player.getPosition().z - 1.0f && barrier.getPosition().z <= player.getPosition().z + 1.0f) {
         // Check if the barrier is in the same lane as the player
         if (barrier.getPosition().x == player.getPosition().x) {
-            return true;  // Collision detected
+            return true;  // Collision is detected
         }
     }
     return false;  // No collision
@@ -219,6 +205,6 @@ bool World::checkCollision(const Player& player, const Barrier& barrier)
 
 void World::takeDMG()
 {
-    lives.decreaseLives(1);
+    lives.decreaseLives(1);     // decreases lives by 1
 }
 

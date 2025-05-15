@@ -14,11 +14,13 @@
 
 int main()
 {
+    // window creation
     SDL_Window* window = SDL_CreateWindow("OpenGL Game",
         SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
         WINDOW_WIDTH, WINDOW_HEIGHT,
         SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
 
+    // debug/check
     if (!SDL_GL_CreateContext(window))
     {
         throw std::runtime_error("Failed to create OpenGL context");
@@ -58,11 +60,9 @@ int main()
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
-        world.update(deltaTime, keyboard);
-        world.render();
+        world.update(deltaTime, keyboard);      // updates world/game 
+        world.render();         // renders game
         
-        //glEnable(GL_DEPTH_TEST);
-        //glDisable(GL_CULL_FACE);      // dont know what this does, it didnt cahnge anything
         
 		SDL_GL_SwapWindow(window);
 	}
