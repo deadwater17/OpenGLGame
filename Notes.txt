@@ -28,7 +28,6 @@ Motion blur, depth-of-field
 Deferred rendering
 
 Issue:
-1. Change the player model into something else
 2. Create a lightShader to make it point down on to the road 
 (Create 3 lights in a row first, to accommodate the player spawn lights)
 3. Create the same thing as scores for lives 
