@@ -5,6 +5,7 @@ Player::Player(const std::string& modelPath, const std::string& texturePath)
 	, m_texture(texturePath)
 	, m_position(0.0f, 0.0f, 0.0f)
 	, m_velocity(0.0f)
+    , scale (10,10,10)
 {
     playerHP = 3;
 }
@@ -75,4 +76,9 @@ void Player::draw(Shader& shader)
     glBindVertexArray(0);
 
 	//std::cout << "Player is drawn" << std::endl;
+}
+
+void Player::setScale(const glm::vec3& scl)
+{
+    scale = scl;
 }

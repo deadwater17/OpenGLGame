@@ -24,6 +24,8 @@ public:
 	bool playerDeath() const { return m_playerDeath; }
 	void setPlayerDeath(bool death) { m_playerDeath = death; }
 
+	void setScale(const glm::vec3& scl);
+
 	int playerHP;
 
 private:
@@ -40,4 +42,5 @@ private:
 	int minLane = -1;
 	int maxLane = 1;
 
+	glm::vec3 scale;
 };

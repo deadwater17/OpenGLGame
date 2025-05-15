@@ -13,6 +13,7 @@
 #include "Score.h"
 #include "uiShader.h"
 #include "LightManager.h"
+#include "Lives.h"
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
@@ -40,6 +41,7 @@ private:
 	Barrier barrier;
 	Score score;
 	LightManager lightManager;
+	Lives lives;
 
 	std::vector<Road> m_roads;
 	const float m_tileLength = 78.5f;
